@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bluecollar-landing",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "C:\\Users\\user\\Desktop\\mission\\bluecollar-landing",
+      "port": 3000
+    }
+  ]
+}

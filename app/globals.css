@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  /* 브랜드 컬러 — 딥 네이비 / 코발트 블루 / 콘크리트 그레이 */
+  --color-navy-950: #060f1e;
+  --color-navy-900: #0a1a33;
+  --color-navy-800: #10264a;
+  --color-cobalt-400: #4d8dff;
+  --color-cobalt-500: #2d7dff;
+  --color-cobalt-600: #1d5fd6;
+  --color-concrete-100: #f2f4f7;
+  --color-concrete-200: #e4e8ee;
+  --color-concrete-300: #c9d2de;
+  --color-concrete-500: #5f6b7d;
+
+  --font-sans: var(--font-noto-sans-kr), "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+}
+
+/* 고연령 사용자 가독성: 기본 글자 크기를 키운다 (rem 기준 전체 상향) */
+html {
+  font-size: 17px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-navy-950);
+  font-family: var(--font-sans);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 블루프린트 그리드 배경 (네이비 섹션용) */
+.blueprint-grid {
+  background-image:
+    linear-gradient(rgba(77, 141, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77, 141, 255, 0.07) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
