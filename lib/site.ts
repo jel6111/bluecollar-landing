@@ -6,7 +6,7 @@ export const SITE = {
   name: "블루칼라 Blue Collar",
   title: "블루칼라 | 작업 사진이 기록과 포트폴리오가 됩니다",
   description:
-    "카톡이나 문자로 작업 사진을 보고하는 기공을 위한 무료 가설 검증 테스트입니다.",
+    "카톡·문자로 작업 사진을 전송하는 기공들을 위한 간편 솔루션",
   /** Vercel 배포 URL (OG 메타데이터 절대경로 기준) */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   /** 설문(구글폼) URL — 미설정 시 CTA가 방어 동작한다 */
