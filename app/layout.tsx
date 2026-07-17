@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og.jpg",
+        url: "/og-v2.jpg",
         width: 1200,
         height: 630,
         alt: "블루칼라 Blue Collar — 작업 사진이 기록과 포트폴리오가 되는 플랫폼",

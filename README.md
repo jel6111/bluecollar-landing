@@ -69,7 +69,7 @@ GA 설정: [analytics.google.com](https://analytics.google.com)에서 GA4 속성
 
 ## OG 이미지 교체
 
-`public/og.jpg` (1200×630) 파일을 교체하면 됩니다. 로고는 `public/logo.png`.
+`public/og-v2.jpg` (1200×630) 파일을 교체하면 됩니다. 카톡이 이미지 URL을 캐싱하므로, 이미지를 바꿀 때는 파일명도 함께 바꾸고(`og-v3.jpg` 등) `app/layout.tsx`의 `openGraph.images.url`을 갱신하세요. 로고는 `public/logo.png`.
 
 ## 프로젝트 구조
 
@@ -84,6 +84,6 @@ components/
 lib/
   site.ts           # 환경변수 기반 사이트 설정
 public/
-  og.jpg            # 카톡 공유용 OG 이미지 (1200×630)
+  og-v2.jpg         # 카톡 공유용 OG 이미지 (1200×630)
   logo.png          # 브랜드 로고
 ```
