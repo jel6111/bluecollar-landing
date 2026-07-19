@@ -44,7 +44,7 @@ function readUtm(): Record<string, string> {
 export default function CtaButton({
   location,
   size = "lg",
-  label = "무료 체험 예약하기",
+  label = "무료 체험 신청하기",
 }: Props) {
   const [notice, setNotice] = useState(false);
   const formReady = isFormUrlReady(SITE.formUrl);

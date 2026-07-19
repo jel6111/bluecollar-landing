@@ -41,7 +41,7 @@ function Header() {
             블루칼라 <span className="text-cobalt-400">Blue Collar</span>
           </span>
         </div>
-        <CtaButton location="header" size="md" label="무료 예약" />
+        <CtaButton location="header" size="md" label="무료 신청" />
       </div>
     </header>
   );
@@ -536,13 +536,15 @@ function ValidationNotice() {
           아직 정식 출시 전입니다.
         </h2>
         <p className="text-lg sm:text-xl text-concrete-200 leading-relaxed">
-          블루칼라는 작업 사진을 자주 전송하는 기공분들이 이 솔루션을 실제로
-          편하게 사용할지 검증하고 있습니다. 이번 예약 설문은 현장의 실제
-          불편과 사용 가능성을 확인하기 위한 조사입니다.
+          블루칼라는 핵심 기능이 구현된 베타 단계로, 작업 사진을 자주 전송하는
+          기공분들이 이 서비스를 실제로 편하게 사용하는지 검증하고 있습니다.
+          이번 신청 설문은 현장의 실제 불편과 사용 가능성을 확인하기 위한
+          조사입니다.
         </p>
         <p className="mt-6 text-base text-concrete-300 leading-relaxed">
-          지금 예약하시면 솔루션이 준비되는 대로 무료로 체험하실 수 있는 링크를
-          보내드립니다.
+          지금 신청하시면 카카오톡으로 시작 방법을 안내해드리고, 무료 베타
+          테스트에 바로 참여하실 수 있습니다. 신청이 많으면 순차적으로
+          안내드립니다.
         </p>
       </div>
     </section>
@@ -602,15 +604,16 @@ function FinalCta() {
     <section className="bg-cobalt-600 text-white">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-20 text-center flex flex-col items-center">
         <h2 className="text-3xl sm:text-4xl font-black mb-4">
-          1분이면 예약할 수 있습니다.
+          1분이면 신청할 수 있습니다.
         </h2>
         <p className="text-lg sm:text-xl text-white/90 leading-relaxed mb-10 max-w-xl">
-          현장에서 실제로 겪은 경험을 알려주시고 연락처를 남겨주세요. 서비스가
-          준비되는 대로 카카오톡으로 무료 체험 링크를 보내드립니다.
+          현장에서 실제로 겪은 경험을 알려주시고 연락처를 남겨주세요.
+          카카오톡으로 시작 방법을 안내해드리고, 무료 베타 테스트에 바로
+          참여하실 수 있습니다.
         </p>
         <CtaButton location="bottom" />
         <p className="mt-6 text-sm text-white/80 leading-relaxed">
-          연락처 입력은 선택 사항이며, 무료 체험 링크 전송 목적으로만
+          연락처 입력은 선택 사항이며, 무료 베타 테스트 안내 목적으로만
           사용됩니다.
         </p>
       </div>
@@ -626,8 +629,8 @@ function Footer() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10 flex flex-col gap-2 text-sm sm:text-base">
         <p className="font-bold text-white text-lg">블루칼라 Blue Collar</p>
         <p>
-          연락처 입력은 선택 사항이며, 무료 체험 링크 전송 목적으로만
-          사용됩니다. 수집된 정보는 전송 후 폐기됩니다.
+          연락처 입력은 선택 사항이며, 무료 베타 테스트 안내 목적으로만
+          사용됩니다. 수집된 정보는 안내 후 폐기됩니다.
         </p>
         {SITE.contactEmail && (
           <p>
