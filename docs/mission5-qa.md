@@ -26,7 +26,7 @@
 - [ ] 제품 링크가 `parancollar.com`으로 이동(링크 주소는 확인).
 - [x] 페이지 자체의 브라우저 Console 오류 없음(브라우저 확장 프로그램의 메타데이터 오류는 제외).
 - [ ] GitHub에 `.env.local`, API 키, `node_modules`, `.next`가 없음.
-- [ ] 수정 커밋을 push하면 Vercel에 새 배포가 생성됨. Git 연결 후 수동으로 브랜치 배포를 만들었으므로 자동 배포는 아직 검증되지 않음.
+- [x] 수정 커밋을 push하면 Vercel에 새 Preview 배포가 생성됨. 문서 변경 커밋 `7cf7246`, `b17ee8d`가 각각 자동 배포되어 Ready 상태를 확인함.
 
 ## 사용자 검증과 구분
 
