@@ -2,7 +2,7 @@
 
 현장 기공이 카카오톡으로 보내는 작업 사진을 현장·날짜별 기록으로 정리하고, 보고 링크와 보관함·포트폴리오로 이어주는 **실제 베타 서비스**를 소개하는 랜딩 페이지입니다. 기존 미션 2 설문용 랜딩을 미션 3의 행동 검증 계획과 미션 4 Figma 스타일에 맞춰 갱신했습니다.
 
-- 랜딩 배포 URL: Vercel의 새 배포를 확인한 뒤 여기에 기록
+- [미션 5 랜딩 배포](https://bluecollar-landing.vercel.app/)
 - [실제 서비스](https://parancollar.com)
 - [미션 4 Figma](https://www.figma.com/design/b1dSePgftJ6gBZuVJZUlmY/정이레?node-id=85-2)
 - [기획·디자인 반영](docs/mission5-plan.md)
@@ -63,4 +63,6 @@ docs/                미션 5 기획·QA
 
 ## 배포와 점검
 
-`main` 브랜치를 Vercel 프로젝트에 연결합니다. PR을 검토·병합한 뒤 Vercel의 새 배포가 Ready인지 확인하고, [QA 체크리스트](docs/mission5-qa.md)에 배포 URL의 모바일·시크릿 창 결과를 기록합니다. 현재 저장소는 비공개이므로 평가자에게 저장소 접근 권한을 부여해야 합니다.
+`jel6111/bluecollar-landing`을 실제 서비스 `jel6111/parancollar`와 별도인 Vercel 프로젝트 `bluecollar-landing`에 연결했습니다. 2026-09-28에는 미션 브랜치 `feature/mission5-landing-20260928`의 커밋 `efccd90`을 Preview에서 검증한 뒤 위 공개 주소의 Production 배포로 승격했습니다. `main`에는 아직 이전 랜딩이 있으므로, 향후 `main` 푸시는 공개 주소의 내용을 바꿀 수 있습니다. PR을 검토·병합할 때 현재 미션 코드가 `main`에 반영되는지 확인하세요.
+
+[QA 체크리스트](docs/mission5-qa.md)에 완료된 항목과 남은 점검을 구분해 기록했습니다. 현재 저장소는 비공개이므로 평가자에게 저장소 접근 권한을 부여해야 합니다.
