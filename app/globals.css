@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @theme {
   /* 브랜드 컬러 — 딥 네이비 / 코발트 블루 / 콘크리트 그레이 */
