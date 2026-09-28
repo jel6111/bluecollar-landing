@@ -20,6 +20,7 @@
 - shadcn/ui 구성(`components.json`, `components/ui/button.tsx`, `components/ui/card.tsx`)
 - Vercel, 선택적 Google Analytics 4
 - 주요 섹션을 컴포넌트로 나누고 버튼·카드를 재사용
+- 제공받은 실제 서비스 화면 6장을 단계별로 선택하고 원본 크기로 열람
 - `사용 방법 보기`: JavaScript `scrollIntoView`로 해결 방식 섹션에 이동
 - 카카오톡 CTA: 채널로 이동하고 GA4가 설정된 경우 클릭 위치별 `kakao_start_click` 이벤트 기록
 
@@ -57,7 +58,7 @@ app/                 페이지 구성, 메타데이터, 스타일
 components/          CTA, 섹션 이동, 분석, 아이콘
 components/ui/       재사용 버튼·카드
 lib/                 사이트 주소·스타일 유틸리티
-public/              로고, OG, 제품 시연용 현장 사진
+public/              PDF 원본에서 추출한 로고, OG, 실제 서비스 화면 캡처
 docs/                미션 5 기획·QA
 ```
 
@@ -66,3 +67,5 @@ docs/                미션 5 기획·QA
 `jel6111/bluecollar-landing`을 실제 서비스 `jel6111/parancollar`와 별도인 Vercel 프로젝트 `bluecollar-landing`에 연결했습니다. 2026-09-28에는 미션 브랜치 `feature/mission5-landing-20260928`의 커밋 `efccd90`을 Preview에서 검증한 뒤 위 공개 주소의 Production 배포로 승격했습니다. `main`에는 아직 이전 랜딩이 있으므로, 향후 `main` 푸시는 공개 주소의 내용을 바꿀 수 있습니다. PR을 검토·병합할 때 현재 미션 코드가 `main`에 반영되는지 확인하세요.
 
 [QA 체크리스트](docs/mission5-qa.md)에 완료된 항목과 남은 점검을 구분해 기록했습니다. 현재 저장소는 비공개이므로 평가자에게 저장소 접근 권한을 부여해야 합니다.
+
+2026-09-29에는 제공받은 블루칼라 로고와 실제 서비스 화면으로 랜딩의 예시 목업을 교체했습니다. 이 수정은 제출용 feature 브랜치에서 검토 중이며 위 공개 URL에는 아직 반영되지 않았습니다.

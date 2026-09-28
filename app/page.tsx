@@ -35,9 +35,9 @@ function Header() {
           <Image
             src={logo}
             alt="블루칼라 로고"
-            width={34}
-            height={34}
-            className="rounded-lg shrink-0"
+            width={42}
+            height={42}
+            className="shrink-0 rounded-lg bg-white p-1"
             priority
           />
           <span className="text-white font-bold text-lg truncate">
@@ -85,7 +85,7 @@ const FLOW_STEPS: { icon: IconName; title: string; desc: string }[] = [
   {
     icon: "camera",
     title: "카카오톡 사진 전송",
-    desc: "하던 대로 사진만 보내면",
+    desc: "채널에서 현장을 정하고 사진을 보내면",
   },
   {
     icon: "folder",
@@ -195,7 +195,7 @@ const STEPS = [
   {
     no: "1",
     title: "사진 전송",
-    desc: "평소 현장 담당자에게 보고하듯 작업 사진을 카톡으로 보냅니다.",
+    desc: "카카오톡 채널에서 직종·지역을 알려주고, 현장을 정해 작업 사진을 보냅니다.",
   },
   {
     no: "2",
@@ -246,7 +246,7 @@ function Solution() {
   );
 }
 
-/* --------------------- 솔루션 미리보기 — ① 보고(핵심) ② 포트폴리오(덤) --------------------- */
+/* -------------------------- 실제 서비스 화면 갤러리 -------------------------- */
 
 /* ------------------------------- 검증 단계 안내 ------------------------------ */
 

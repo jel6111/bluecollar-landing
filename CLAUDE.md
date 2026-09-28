@@ -9,5 +9,5 @@
 - 미션 4 시안: `https://www.figma.com/design/b1dSePgftJ6gBZuVJZUlmY/정이레?node-id=85-2`. 핵심 흐름은 기록 정리 → 보고 미리보기 → 로그인 없는 외부 열람이다. 보관함·포트폴리오는 축적 가치다.
 - 기술: Next.js 16 App Router, TypeScript, Tailwind CSS 4, shadcn/ui 방식의 `components/ui`, Vercel. 반복 UI는 컴포넌트화한다.
 - 디자인: Noto Sans KR, 파랑 `#2563EB`, 진한 텍스트 `#0F172A`, 연한 표면 `#F8FAFC`, 큰 버튼과 쉬운 문장. 모바일 320px부터 가로 넘침 없이 작동하게 한다.
-- 정적 시연 사진은 `public/site-*.jpg`, `public/pf-*.jpg`에 있다. 실제 사용자 성과로 오해될 숫자나 후기는 넣지 않는다.
+- 제공받은 실제 제품 화면 캡처는 `public/product-*.jpg`, 로고는 `public/logo.png`와 `app/icon.png`에 있다. 화면 속 이름·날짜·사진 수는 제품 예시로만 다루고, 실제 사용자 성과로 오해될 숫자나 후기는 넣지 않는다.
 - 환경 변수의 실제 값·토큰은 저장소와 문서에 넣지 않는다. `npm run lint`, `npm run build`, 모바일·데스크톱 CTA 점검 후 변경한다.
