@@ -1,89 +1,66 @@
-# 블루칼라 Blue Collar — 미션 2 가설 검증 MVP 랜딩페이지
+# 블루칼라 · 미션 5 랜딩 페이지
 
-작업 사진을 카카오톡으로 보고하는 기공이 현재 방식의 불편에 공감하고, 무료 테스트 참여 행동을 보이는지 검증하는 스모크 테스트용 랜딩페이지입니다.
+현장 기공이 카카오톡으로 보내는 작업 사진을 현장·날짜별 기록으로 정리하고, 보고 링크와 보관함·포트폴리오로 이어주는 **실제 베타 서비스**를 소개하는 랜딩 페이지입니다. 기존 미션 2 설문용 랜딩을 미션 3의 행동 검증 계획과 미션 4 Figma 스타일에 맞춰 갱신했습니다.
 
-> 이 페이지는 **미션 제출용 가설 검증 MVP**이며, 실제 블루칼라 제품 MVP(사진 정리·포트폴리오 생성 기능)가 아닙니다. 회원가입·DB·업로드 기능은 의도적으로 없습니다.
+- 랜딩 배포 URL: Vercel의 새 배포를 확인한 뒤 여기에 기록
+- [실제 서비스](https://parancollar.com)
+- [미션 4 Figma](https://www.figma.com/design/b1dSePgftJ6gBZuVJZUlmY/정이레?node-id=85-2)
+- [기획·디자인 반영](docs/mission5-plan.md)
+- [QA 체크리스트](docs/mission5-qa.md)
 
-## 기술 스택
+## 핵심 흐름
 
-- Next.js (App Router) + TypeScript + Tailwind CSS
-- Vercel 배포
-- Google Analytics (gtag.js) — 방문·CTA 클릭 측정
+문제 인식 → 카카오톡 사진 전송 → 작업기록·보고 링크 → 로그인 없는 외부 열람 → 보관함·포트폴리오. 랜딩의 주 CTA는 [카카오톡 채널](https://pf.kakao.com/_GnafX/chat)로 이어집니다. 별도의 구글폼 신청을 첫 단계로 요구하지 않습니다.
+
+미션 3에서 실제 사용자 응답·베타 온보딩·반복 사용 데이터는 아직 없었습니다. 이 랜딩의 메시지는 구현된 기능과 **검증할 가설**을 구분하며 사용자 성과를 주장하지 않습니다.
+
+## 기술 스택과 인터랙션
+
+- Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4
+- shadcn/ui 구성(`components.json`, `components/ui/button.tsx`, `components/ui/card.tsx`)
+- Vercel, 선택적 Google Analytics 4
+- 주요 섹션을 컴포넌트로 나누고 버튼·카드를 재사용
+- `사용 방법 보기`: JavaScript `scrollIntoView`로 해결 방식 섹션에 이동
+- 카카오톡 CTA: 채널로 이동하고 GA4가 설정된 경우 클릭 위치별 `kakao_start_click` 이벤트 기록
 
 ## 로컬 실행
 
+Node.js 20 이상을 권장합니다.
+
 ```bash
-npm install
-cp .env.example .env.local   # 값 채우기 (아래 참고)
-npm run dev                  # http://localhost:3000
+npm ci
+cp .env.example .env.local
+npm run dev
 ```
 
-빌드 확인:
+`http://localhost:3000`에서 확인합니다. 배포 전에는 다음을 실행합니다.
 
 ```bash
+npm run lint
 npm run build
 ```
 
-## 환경변수 (.env.local / Vercel 환경변수)
+## 환경 변수
 
-| 변수 | 필수 | 설명 |
+| 이름 | 필요 여부 | 설명 |
 |---|---|---|
-| `NEXT_PUBLIC_GOOGLE_FORM_URL` | ✅ | 구글폼 URL. 미설정/placeholder 상태면 CTA가 이동하지 않고 안내 문구를 표시 |
-| `NEXT_PUBLIC_GA_ID` | 선택 | GA4 측정 ID (`G-XXXXXXXXXX`). 미설정 시 GA 스크립트 미삽입 |
-| `NEXT_PUBLIC_SITE_URL` | 배포 시 | 배포 URL. 카톡 공유 OG 이미지 절대경로 기준 |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | 선택 | 푸터 문의 이메일. 미설정 시 문의 줄 자체가 숨겨짐 |
+| `NEXT_PUBLIC_SITE_URL` | 배포 시 권장 | 랜딩의 공개 URL. OG 기준. 미설정 시 Vercel 배포 URL 사용 |
+| `NEXT_PUBLIC_GA_ID` | 선택 | GA4 측정 ID. 없으면 GA 스크립트 없음 |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | 선택 | 푸터 공개 문의 이메일 |
 
-## 구글폼 연결 방법
+환경 변수에는 실제 비밀키를 넣지 않습니다. `.env*`는 Git에서 제외하고 `.env.example`만 예시로 포함합니다. `NEXT_PUBLIC_` 값은 브라우저에서 읽을 수 있는 공개 설정입니다.
 
-1. 작업요청서 7번 섹션의 문항으로 구글폼을 생성
-2. 보내기 → 링크 복사 (`https://forms.gle/...`)
-3. `.env.local`과 Vercel 환경변수의 `NEXT_PUBLIC_GOOGLE_FORM_URL`에 입력
-4. 재배포(또는 dev 서버 재시작) 후 CTA 클릭이 폼으로 이동하는지 확인
-
-## 측정 (Analytics)
-
-- **방문 수**: GA4 `page_view` 자동 수집 (유입 채널은 UTM으로 구분)
-- **CTA 클릭**: 커스텀 이벤트 `hypothesis_test_apply_click`
-  - 속성: `location` (`header | hero | bottom`), `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`
-- **UTM 유지**: 랜딩 URL의 UTM 파라미터가 구글폼 이동 URL에 그대로 이어붙음
-- 구글폼 **응답 수**는 폼 응답 시트에서 별도 집계
-
-GA 설정: [analytics.google.com](https://analytics.google.com)에서 GA4 속성 생성 → 웹 스트림 추가 → 측정 ID를 `NEXT_PUBLIC_GA_ID`에 입력. (Vercel Analytics를 쓰려면 대시보드에서 Enable만 해도 방문 수는 잡힘)
-
-## 배포 채널별 URL 예시
+## 구조
 
 ```text
-/?utm_source=kakao_openchat&utm_medium=community&utm_campaign=mission2
-/?utm_source=naver_cafe&utm_medium=community&utm_campaign=mission2
-/?utm_source=naver_band&utm_medium=community&utm_campaign=mission2
-/?utm_source=direct_dm&utm_medium=direct&utm_campaign=mission2
-/?utm_source=tool_shop&utm_medium=offline&utm_campaign=mission2
+app/                 페이지 구성, 메타데이터, 스타일
+components/          CTA, 섹션 이동, 분석, 아이콘
+components/ui/       재사용 버튼·카드
+lib/                 사이트 주소·스타일 유틸리티
+public/              로고, OG, 제품 시연용 현장 사진
+docs/                미션 5 기획·QA
 ```
 
-## Vercel 배포
+## 배포와 점검
 
-1. GitHub에 푸시 후 [vercel.com](https://vercel.com)에서 Import (또는 `npx vercel`)
-2. 프로젝트 설정 → Environment Variables에 위 환경변수 입력
-3. 배포 후 `NEXT_PUBLIC_SITE_URL`을 실제 배포 URL로 갱신하고 재배포
-4. [카카오 공유 디버거](https://developers.kakao.com/tool/debugger/sharing)에서 OG 미리보기 확인 (수정 후엔 캐시 초기화)
-
-## OG 이미지 교체
-
-`public/og-v2.jpg` (1200×630) 파일을 교체하면 됩니다. 카톡이 이미지 URL을 캐싱하므로, 이미지를 바꿀 때는 파일명도 함께 바꾸고(`og-v3.jpg` 등) `app/layout.tsx`의 `openGraph.images.url`을 갱신하세요. 로고는 `public/logo.png`.
-
-## 프로젝트 구조
-
-```text
-app/
-  layout.tsx        # 메타데이터(OG 포함), 폰트, GA 삽입
-  page.tsx          # 랜딩페이지 전체 섹션
-  globals.css       # 브랜드 컬러 테마, 기본 글자 크기(고연령 가독성)
-components/
-  CtaButton.tsx     # 단일 CTA — UTM 유지, GA 이벤트, URL 미설정 방어
-  Analytics.tsx     # GA gtag.js (측정 ID 있을 때만)
-lib/
-  site.ts           # 환경변수 기반 사이트 설정
-public/
-  og-v2.jpg         # 카톡 공유용 OG 이미지 (1200×630)
-  logo.png          # 브랜드 로고
-```
+`main` 브랜치를 Vercel 프로젝트에 연결합니다. PR을 검토·병합한 뒤 Vercel의 새 배포가 Ready인지 확인하고, [QA 체크리스트](docs/mission5-qa.md)에 배포 URL의 모바일·시크릿 창 결과를 기록합니다. 현재 저장소는 비공개이므로 평가자에게 저장소 접근 권한을 부여해야 합니다.

@@ -5,9 +5,9 @@
   --color-navy-950: #060f1e;
   --color-navy-900: #0a1a33;
   --color-navy-800: #10264a;
-  --color-cobalt-400: #4d8dff;
-  --color-cobalt-500: #2d7dff;
-  --color-cobalt-600: #1d5fd6;
+  --color-cobalt-400: #60a5fa;
+  --color-cobalt-500: #2563eb;
+  --color-cobalt-600: #1d4ed8;
   --color-concrete-100: #f2f4f7;
   --color-concrete-200: #e4e8ee;
   --color-concrete-300: #c9d2de;
@@ -21,6 +21,10 @@
 html {
   font-size: 17px;
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 body {

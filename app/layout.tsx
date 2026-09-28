@@ -27,7 +27,7 @@ export const metadata: Metadata = {
         url: "/og-v2.jpg",
         width: 1200,
         height: 630,
-        alt: "블루칼라 Blue Collar — 작업 사진이 기록과 포트폴리오가 되는 플랫폼",
+        alt: "블루칼라 — 카카오톡 작업사진이 작업보고와 포트폴리오로 이어집니다",
       },
     ],
   },
