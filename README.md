@@ -64,8 +64,8 @@ docs/                미션 5 기획·QA
 
 ## 배포와 점검
 
-`jel6111/bluecollar-landing`을 실제 서비스 `jel6111/parancollar`와 별도인 Vercel 프로젝트 `bluecollar-landing`에 연결했습니다. 2026-09-28에는 미션 브랜치 `feature/mission5-landing-20260928`의 커밋 `efccd90`을 Preview에서 검증한 뒤 위 공개 주소의 Production 배포로 승격했습니다. `main`에는 아직 이전 랜딩이 있으므로, 향후 `main` 푸시는 공개 주소의 내용을 바꿀 수 있습니다. PR을 검토·병합할 때 현재 미션 코드가 `main`에 반영되는지 확인하세요.
+`jel6111/bluecollar-landing`을 실제 서비스 `jel6111/parancollar`와 별도인 Vercel 프로젝트 `bluecollar-landing`에 연결했습니다. 2026-09-29에는 미션 브랜치 `feature/mission5-landing-20260928`의 커밋 `b39c54e`를 Preview에서 확인한 뒤 위 공개 주소의 Production 배포로 승격했습니다. `main`에는 아직 이전 랜딩이 있으므로, 향후 `main` 푸시는 공개 주소의 내용을 바꿀 수 있습니다. PR을 검토·병합할 때 현재 미션 코드가 `main`에 반영되는지 확인하세요.
 
 [QA 체크리스트](docs/mission5-qa.md)에 완료된 항목과 남은 점검을 구분해 기록했습니다. 현재 저장소는 비공개이므로 평가자에게 저장소 접근 권한을 부여해야 합니다.
 
-2026-09-29에는 제공받은 블루칼라 로고와 실제 서비스 화면으로 랜딩의 예시 목업을 교체했습니다. 이 수정은 제출용 feature 브랜치에서 검토 중이며 위 공개 URL에는 아직 반영되지 않았습니다.
+2026-09-29에는 제공받은 블루칼라 로고와 실제 서비스 화면으로 랜딩의 예시 목업을 교체하고, 실제 서비스 설명에 맞게 문구를 정리했습니다. 이 화면과 문구는 위 공개 URL에 반영되었습니다.

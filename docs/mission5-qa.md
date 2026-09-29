@@ -18,20 +18,20 @@
 
 ## 배포 환경 수동 확인
 
-2026-09-28 `feature/mission5-landing-20260928`의 `efccd90`을 Preview로 빌드한 뒤, 별도 Vercel 프로젝트의 Production으로 승격했습니다. 공개 주소는 <https://bluecollar-landing.vercel.app/>입니다. 완료된 항목과 남은 점검을 구분합니다.
+2026-09-29 `feature/mission5-landing-20260928`의 `b39c54e` Preview를 확인한 뒤, 제출용 Vercel 프로젝트 `bluecollar-landing`의 Production으로 승격했습니다. 공개 주소는 <https://bluecollar-landing.vercel.app/>입니다. 실제 서비스 `parancollar.com`의 프로젝트는 변경하지 않았습니다.
 
-2026-09-29 로컬에서 진행한 로고·제품 화면 교체는 아직 공개 배포에 반영하지 않았습니다. 아래 완료 표시는 기존 공개 버전의 확인 결과입니다.
-
-- [x] Vercel Production 배포가 Ready이고 공개 URL이 인증 없이 HTTP 200 및 미션 문구를 반환함.
-- [x] 브라우저에서 첫 화면, 로고, 현장 사진이 표시됨.
+- [x] Vercel Production 배포가 Ready이고 공개 URL이 인증 없이 HTTP 200 및 최신 문구·갤러리를 반환함.
+- [x] 브라우저에서 첫 화면과 새 로고를 확인하고, 제품 화면 파일·OG 이미지가 HTTP 200을 반환함.
 - [ ] 별도 시크릿 창에서 화면과 이미지가 표시됨(인증 없는 HTTP 응답은 확인).
-- [ ] 모바일 320px/375px, 데스크톱에서 가로 넘침·겹침 없음.
+- [ ] 공개 배포의 모바일 320px/375px에서 가로 넘침·겹침 없음(로컬에서는 확인, 배포 브라우저의 뷰포트 변경은 적용되지 않음).
+- [x] 공개 배포의 데스크톱 기본 뷰포트에서 가로 넘침 없음.
 - [x] 사용 방법 버튼이 해결 섹션으로 이동.
+- [x] 실제 제품 화면 탭을 고르면 제목·이미지 경로가 전환됨.
 - [ ] 상단·히어로·중간·하단 CTA가 카카오톡 앱/웹으로 열림(네 곳의 링크 주소는 채널 URL로 확인).
 - [ ] 제품 링크가 `parancollar.com`으로 이동(링크 주소는 확인).
-- [x] 페이지 자체의 브라우저 Console 오류 없음(브라우저 확장 프로그램의 메타데이터 오류는 제외).
-- [ ] GitHub에 `.env.local`, API 키, `node_modules`, `.next`가 없음.
-- [ ] 새 로고와 실제 화면 갤러리를 Preview에서 확인하고, 제출할 배포 URL의 화면과 일치시킴.
+- [x] 공개 페이지에서 수집된 브라우저 Console 오류 없음.
+- [x] Git 추적 파일 목록에 `.env.local`, `node_modules`, `.next`가 없음(키 문자열에 대한 별도 전체 검사는 하지 않음).
+- [x] 새 로고와 실제 화면 갤러리가 Preview와 공개 URL에서 표시되고, 공개 이미지 파일이 HTTP 200을 반환함.
 - [x] 수정 커밋을 push하면 Vercel에 새 Preview 배포가 생성됨. 문서 변경 커밋 `7cf7246`, `b17ee8d`가 각각 자동 배포되어 Ready 상태를 확인함.
 
 ## 사용자 검증과 구분
