@@ -7,6 +7,7 @@
 | Next.js App Router, Tailwind CSS, shadcn/ui 구성 | 확인 | `package.json`, `components.json`, `components/ui/` |
 | 주요 섹션·재사용 UI | 확인 | `app/page.tsx`, `components/` |
 | 제공된 로고·실제 제품 화면 반영 | 확인 | PDF에서 추출한 로고와 6장 화면 캡처, 선택형 갤러리 |
+| 실제 서비스 문구와 공개 범위 | 확인 | 무료 시작, 보고 링크 열람·피드백, 직접 고른 포트폴리오 사진 공개, 사용자 검증 예정 안내 |
 | JS 인터랙션 | 확인 | 공개 배포에서 `사용 방법 보기` 클릭 후 해당 섹션 표시 |
 | 이미지 대체 텍스트와 링크 역할 | 코드 확인 | 제품 사진 `alt`, 카카오톡 CTA는 `<a>`, 섹션 이동은 `<button>` |
 | 제목·설명·OG 이미지 | 확인 | `app/layout.tsx`, `public/og-v2.jpg` 1200×630 |

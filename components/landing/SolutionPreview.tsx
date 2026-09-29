@@ -39,7 +39,7 @@ const SCREENS = [
     label: "보고 링크",
     title: "정리된 기록을 링크로 공유합니다",
     description:
-      "받는 분은 현장명과 날짜, 사진, 설명이 담긴 작업 보고를 링크에서 확인할 수 있습니다.",
+      "받는 분은 현장명과 날짜, 사진, 설명을 링크에서 확인합니다. 보낸 사람은 링크 열람 횟수와 사진에 남긴 피드백을 확인할 수 있습니다.",
     src: "/product-report.jpg",
     width: 1080,
     height: 2340,
@@ -143,6 +143,16 @@ export default function SolutionPreview() {
               className="mx-auto h-auto max-h-175 w-auto max-w-full rounded-3xl object-contain"
             />
           </a>
+        </div>
+
+        <div className="mx-auto mt-10 max-w-3xl rounded-3xl border border-concrete-200 bg-white p-6 text-navy-950 sm:p-8">
+          <h3 className="text-xl font-black leading-snug sm:text-2xl">
+            공개할 사진은 직접 고릅니다.
+          </h3>
+          <p className="mt-3 leading-relaxed text-concrete-500">
+            보관함의 기록은 나만 보는 화면에서 관리합니다. 보고 링크를 받은 사람은
+            공유한 기록을 볼 수 있고, 포트폴리오에는 직접 선택한 사진만 공개합니다.
+          </p>
         </div>
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-concrete-300">

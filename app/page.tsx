@@ -69,7 +69,7 @@ function Hero() {
           정리하고, 링크 하나로 보고할 수 있습니다.
         </p>
         <p className="text-base sm:text-lg text-concrete-300 mb-10 max-w-xl">
-          별도 앱 설치나 회원가입 없이 카카오톡에서 시작합니다.
+          별도 앱 설치나 회원가입 없이 카카오톡 채널에서 무료로 시작합니다.
         </p>
         <div className="flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row">
           <CtaButton location="hero" className="w-full sm:w-auto" />
@@ -92,8 +92,8 @@ const FLOW_STEPS: { icon: IconName; title: string; desc: string }[] = [
     title: "현장별·날짜별 정리",
     desc: "깔끔히 사진이 정리되고",
   },
-  { icon: "link", title: "보고 링크", desc: "링크 하나로 보고 끝" },
-  { icon: "award", title: "포트폴리오", desc: "작업 자료가 저절로 쌓입니다" },
+  { icon: "link", title: "보고 링크", desc: "정리한 기록을 링크로 공유합니다" },
+  { icon: "award", title: "포트폴리오", desc: "대표 사진은 직접 골라 공개합니다" },
 ];
 
 function FlowVisual() {
@@ -205,7 +205,7 @@ const STEPS = [
   {
     no: "3",
     title: "결과 활용",
-    desc: "정리된 링크를 보고에 쓰고, 대표 작업은 포트폴리오로 남깁니다.",
+    desc: "정리된 링크를 보고에 쓰고, 대표 작업은 직접 골라 포트폴리오에 공개할 수 있습니다.",
   },
 ];
 
@@ -255,12 +255,12 @@ function ValidationNotice() {
     <section className="bg-navy-900 text-white border-t border-navy-800">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-20 text-center">
         <h2 className="text-3xl sm:text-4xl font-black mb-6">
-          아직 정식 출시 전입니다.
+          지금은 베타로 운영 중입니다.
         </h2>
         <p className="text-lg sm:text-xl text-concrete-200 leading-relaxed">
           블루칼라는 카카오톡 사진 전송, 작업기록, 보고 링크, 보관함과
-          포트폴리오가 구현된 베타 서비스입니다. 현장에서 첫 사용과 반복 사용이
-          일어나는지 확인하고 있습니다.
+          포트폴리오가 구현된 베타 서비스입니다. 현장에서 실제 사용과 반복 사용이
+          이어지는지는 앞으로 검증할 예정입니다.
         </p>
         <p className="mt-6 text-base text-concrete-300 leading-relaxed">
           카카오톡 채널에서 시작할 수 있습니다. 사용하면서 불편한 점을 알려주시면
@@ -330,7 +330,7 @@ function FinalCta() {
           필요할 때 링크 하나로 보고할 수 있습니다.
         </p>
         <CtaButton location="bottom" />
-        <p className="mt-6 text-sm text-white/80">별도 앱 설치 없이 카카오톡 채널에서 시작합니다.</p>
+        <p className="mt-6 text-sm text-white/80">별도 앱 설치나 회원가입 없이 카카오톡 채널에서 무료로 시작합니다.</p>
       </div>
     </section>
   );
