@@ -1,6 +1,6 @@
 # 미션 6 기능 명세와 구현 계획
 
-작성일: 2026-10-14. 1묶음에서 설계한 전체 명세다. 현재 2묶음의 등록·조회·페이지네이션은 새 로컬 Supabase에서 구현·검증했다. 클라우드 연결과 3·4묶음은 아직 진행하지 않았다.
+작성일: 2026-10-14. 1묶음에서 설계한 전체 명세다. 현재 3묶음까지의 CRUD·페이지네이션·사진·파일 정리를 새 로컬 Supabase에서 구현·검증했다. 클라우드 연결과 4묶음 배포는 아직 진행하지 않았다.
 
 ## 검증할 가치와 범위
 
@@ -39,6 +39,8 @@
 | ID | 서버에서 UUID 검증 | 없는 기록 안내 |
 
 브라우저는 빠른 피드백, 서버는 최종 검증을 담당한다. 서버는 MIME/확장자와 이미지 시그니처를 확인한다. HTML은 텍스트로 표시하며 `dangerouslySetInnerHTML`을 쓰지 않는다. ID·시각·Storage 경로는 서버가 제어한다.
+
+실제 구현은 Sharp 디코딩까지 확인하며 정지 이미지·최대 2,500만 화소를 허용한다. 방향을 적용하고 EXIF 등 메타데이터를 제거한다. 처리 후에도 3 MiB를 검사한다. 폼은 실패한 입력과 File 객체를 유지하며 선택하지 않은 빈 파일은 전송하지 않는다.
 
 ## 데이터 구조
 
@@ -87,6 +89,10 @@
 
 공식 근거: [Next.js Server Actions 설정](https://nextjs.org/docs/app/api-reference/config/next-config-js/serverActions), [Vercel 함수 제한](https://vercel.com/docs/functions/limitations), [Supabase 파일 제한](https://supabase.com/docs/guides/storage/uploads/file-limits).
 
+내부 `storage_cleanup_tasks`는 id, record_id, image_path(unique), reason, attempts, created_at을 저장하고 `cleanup:images`로 재시도한다. 현재 레코드가 참조하는 사진은 삭제하지 않는다. 두 번째 SQL에서 비공개 버킷과 내부 테이블을 생성했다.
+
+경로는 요청별 새 UUID로 만들고 재사용하지 않는다. 응답 유실 시 실제 저장/참조 상태를 다시 확인한다. 수정/삭제는 읽은 updated_at 조건으로 실행한다. 사진 URL은 600초이며 응답 실패 시 재조회 버튼을 제공한다. [Supabase 서명 URL](https://supabase.com/docs/reference/javascript/storage-from-createsignedurl), [파일 삭제](https://supabase.com/docs/reference/javascript/storage-from-remove).
+
 ## UI·상태·디자인
 
 공통 UI는 `RecordForm`, `RecordCard`, `RecordPagination`, `DeleteRecordDialog`, `RecordImage`, 필드 오류·저장 버튼으로 나눈다. 기존 shadcn Button/Card와 필요한 Input/Textarea/Label/AlertDialog/Skeleton을 사용한다.
@@ -98,6 +104,8 @@
 2묶음에서 실제 서비스 링크·분석·문의 연동을 제거하고 내부 CTA의 데모 랜딩으로 바꿨다. 전체 CRUD 완성 후 랜딩 최종 구성을 4묶음에서 검토한다.
 
 현재 로컬 Supabase는 Docker의 별도 `bluecollar-mission6-demo` 스택/API 56321로 연결한다. 등록 모드는 코드의 허용 주소와 일치해야 하며 Vercel에서는 로컬 모드를 거절한다. 클라우드 계정 인증이 준비되지 않아 클라우드 프로젝트는 아직 없다. 새 과제 ref를 확인·등록한 뒤 클라우드에서 같은 흐름을 재검증해야 한다.
+
+사용자는 무료 클라우드 활성 프로젝트 한도를 모두 사용 중이라고 설명했다. 제출 배포 전에 별도 클라우드 확보 결정을 먼저 한다. 운영 프로젝트 재사용·중지·삭제나 유료 결제를 자동으로 진행하지 않는다.
 
 ## 4묶음과 완료 기준
 

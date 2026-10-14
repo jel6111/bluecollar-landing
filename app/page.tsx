@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ClipboardList, FilePlus2, ArrowRight, FileText } from "lucide-react";
+import { ClipboardList, FilePlus2, ArrowRight, PencilLine } from "lucide-react";
 import { DemoHeader, DemoNotice } from "@/components/records/DemoShell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,7 @@ const steps = [
   {
     icon: FilePlus2,
     title: "오늘의 작업을 기록하세요",
-    description: "현장 별칭, 작업일, 제목과 설명을 직접 입력합니다.",
+    description: "현장 별칭, 작업일과 설명을 적고 사진을 함께 저장합니다.",
   },
   {
     icon: ClipboardList,
@@ -16,9 +16,9 @@ const steps = [
     description: "저장한 기록을 목록과 상세 화면에서 확인합니다.",
   },
   {
-    icon: FileText,
-    title: "작업 내용을 자세히 확인하세요",
-    description: "현장 별칭, 작업일과 설명을 상세 화면에서 확인합니다.",
+    icon: PencilLine,
+    title: "필요할 때 고치고 정리하세요",
+    description: "내용과 사진을 수정하고, 필요 없는 기록은 확인 후 삭제합니다.",
   },
 ];
 
@@ -38,8 +38,8 @@ export default function Home() {
               <span className="text-cobalt-400">찾을 수 있는 기록으로.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-concrete-200">
-              가상의 현장 작업을 등록하고, 목록에서 다시 찾아 자세히
-              확인해보세요.
+              가상의 현장 작업을 사진과 함께 등록하고, 다시 찾아 수정하거나
+              정리해보세요.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">

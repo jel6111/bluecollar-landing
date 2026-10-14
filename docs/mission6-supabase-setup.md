@@ -6,11 +6,15 @@
 
 로컬 시작은 `npm run db:start`, 중지는 `npm run db:stop`입니다. 운영 프로젝트 이름을 입력하거나 전체 프로젝트를 조회하는 명령은 사용하지 않습니다. 사용자 인증 기능은 구현하지 않았고, Supabase의 기본 API 키 인프라만 로컬에 존재합니다.
 
+로컬 SQL 갱신은 `npm run db:migrate`, 파일 정리 재시도는 `npm run cleanup:images`다. 비공개 버킷·내부 정리 테이블·가상 예시 2건까지 준비했다.
+
+사용자는 무료 한도를 모두 사용 중이라고 설명했다. 클라우드 확보가 결정되기 전까지 로컬에서 개발하며 운영 자원 재사용·중지·삭제나 유료 결제를 자동 실행하지 않는다. [무료 프로젝트 한도](https://supabase.com/docs/guides/platform/billing-on-supabase), [로컬 개발은 무료](https://supabase.com/docs/guides/local-development).
+
 ## 새 클라우드 과제 프로젝트 연결
 
 1. 사용자가 Supabase 대시보드에서 **새** `bluecollar-mission6-demo` 프로젝트를 생성한다. 기존 서비스 프로젝트를 열어 데이터·환경 변수·키를 복사하거나 수정하지 않는다.
 2. 새 프로젝트 이름·생성 여부·project ref를 확인한다. 비밀이 아닌 ref만 연결 기록에 남긴다. 키/DB 비밀번호/토큰은 채팅에 보내지 않는다.
-3. 새 프로젝트의 SQL Editor에서 저장소의 `supabase/migrations/20261014000100_create_work_records.sql`을 실행한다. 실행 직전 프로젝트 이름과 ref를 확인한다.
+3. 새 프로젝트의 SQL Editor에서 저장소의 `supabase/migrations/20261014000100_create_work_records.sql`, `20261014000200_record_images.sql`을 순서대로 실행한다. 실행 직전 프로젝트 이름과 ref를 확인한다.
 4. 미션 6 체크아웃의 비추적 `.env.local`을 새 과제 값으로 설정한다. 현재 로컬 값은 필요하면 별도로 보관하되 Git에 넣지 않는다.
 5. 프로젝트를 명시적으로 등록한다.
 

@@ -1,59 +1,78 @@
 # 블루칼라 미션 6 · 현장 작업기록 데모
 
-가상의 현장 작업기록을 등록하고 목록·상세에서 다시 확인하는 과제 제출용 MVP입니다. 핵심 데이터는 Supabase Postgres에 저장하며 Mock Data/localStorage를 최종 저장소로 쓰지 않습니다.
+가상의 현장 작업기록을 등록하고 목록·상세에서 조회한 뒤 수정·삭제하는 과제 제출용 MVP입니다. 핵심 데이터는 Supabase Postgres, 사진은 Supabase Storage에 저장합니다. Mock Data와 localStorage를 최종 저장소로 쓰지 않습니다.
 
 ## 현재 상태
 
-2026-10-14 기준 2묶음의 코드와 **새 로컬 Supabase의 실제 등록·조회 흐름**을 구현·검증했습니다. 클라우드 Supabase는 아직 생성·연결하지 못했고, Vercel 배포 URL은 아직 없습니다. 수정·삭제·사진 업로드는 3묶음 범위입니다.
+2026-10-14 기준 **3묶음의 전체 CRUD와 사진 연동을 새 로컬 Supabase에서 구현·검증**했습니다. 클라우드 Supabase와 Vercel 배포는 아직 없습니다. 실제 블루칼라 서비스와 미션 5 배포는 변경하지 않았습니다.
 
 - [기능·테이블 명세](docs/mission6-plan.md)
-- [과제 자원 분리 기록](docs/mission6-isolation.md)
-- [Supabase 로컬·클라우드 준비](docs/mission6-supabase-setup.md)
+- [과제 자원 분리](docs/mission6-isolation.md)
+- [Supabase 준비](docs/mission6-supabase-setup.md)
 - [QA 결과](docs/mission6-qa.md)
 
-## 구현된 흐름
+## 핵심 기능과 사용자 흐름
 
-랜딩의 내부 CTA → 기록 목록 → 새 기록 등록 → 상세 → 새로고침 후 같은 기록 확인. 목록은 DB에서 10건씩 조회하고 URL의 page로 탐색합니다. 잘못된 페이지는 유효한 번호로 조정합니다. 없는 UUID는 안내 화면, DB 오류는 오류 안내, 연결 미설정은 연결 준비 안내로 구분합니다.
+랜딩 → 목록 → 등록 → 상세 → 수정/삭제 → 목록. 목록은 DB에서 10건씩 조회하며 URL의 page를 유지합니다. 마지막 페이지의 기록이 삭제되면 남은 마지막 페이지로 조정합니다.
 
-필수 현장 별칭·작업일·제목과 선택 설명을 서버에서 검증합니다. 저장 중 제출을 비활성화하고 같은 제출 UUID의 재전송은 동일 기록으로 처리합니다. HTML은 텍스트로 표시합니다. 실사용 성과를 주장하지 않으며 실제 이름·주소·연락처를 입력하지 않는 공용 데모입니다.
-
-| 화면 | 경로 | 상태 |
+| 화면 | 경로 | 동작 |
 |---|---|---|
-| 데모 랜딩 | `/` | 구현, 모든 CTA 내부 경로 |
-| 목록·10건 페이지네이션 | `/records?page=1` | 실제 DB 검증 |
-| 등록 | `/records/new` | Server Action 저장 |
-| 상세 | `/records/[id]` | DB 조회·없는 주소 안내 |
-| 수정·삭제 | 상세/수정 경로 | 3묶음 예정 |
-| 사진 | 상세·폼 | 3묶음 예정 |
+| 데모 랜딩 | `/` | 내부 CTA·과제 안내 |
+| 목록 | `/records?page=1` | DB 조회·사진·10건 페이지네이션·빈 상태 |
+| 등록 | `/records/new` | 텍스트·사진 저장, 상세 이동 |
+| 상세 | `/records/[id]` | 저장값·사진·수정/삭제 진입·없는 기록 안내 |
+| 수정 | `/records/[id]/edit?page=1` | 기존 값, 사진 유지/교체/제거 |
+| 삭제 | 상세의 확인창 | 취소·확정, DB와 연결 파일 정리 |
+
+- 필수 현장 별칭·작업일·제목, 선택 설명을 서버에서 검증합니다.
+- 저장 중 중복 제출을 막고 같은 등록 UUID의 재전송은 동일 기록으로 처리합니다.
+- 수정·삭제 시 읽었던 updated_at을 대조해 오래된 화면이 최신 값을 덮어쓰지 않도록 합니다.
+- 실패 시 텍스트와 선택한 사진을 유지합니다. 조회 오류·빈 목록·없는 주소를 구분합니다.
+- 삭제 확인창은 취소·Esc·포커스 복귀를 제공합니다.
+- HTML은 텍스트로 표시합니다. 실제 이름·주소·연락처·사람 얼굴·운영 자료를 입력하지 않는 공용 데모입니다. 모든 방문자가 데모 기록을 조회·수정·삭제할 수 있습니다.
+
+## 사진과 파일 정리
+
+비공개 `work-record-images` 버킷에 사진 한 장을 연결합니다. JPG·PNG·WebP, 최대 3 MiB(3,145,728 bytes)이며 확장자/MIME/실제 디코딩을 검사합니다. 정지 이미지·최대 2,500만 화소를 지원합니다. 사진 방향을 적용하고 EXIF 등 메타데이터를 제거해 저장합니다.
+
+목록·상세는 서버에서 발급한 10분 URL로 표시합니다. 사진 없음·응답 실패를 안내하고 상세/수정 화면에서 다시 불러올 수 있습니다. 비밀 API 키는 브라우저에 전달하지 않습니다.
+
+DB와 Storage는 하나의 트랜잭션이 아닙니다. 업로드 후 DB 실패 시 새 파일을 정리하고, 교체/제거/기록 삭제 성공 뒤 이전 파일을 정리합니다. 현재 레코드에 연결된 경로는 정리 대상에서 제외합니다. 파일 정리 실패는 `storage_cleanup_tasks`에 남겨 재시도하며, 내역 저장까지 실패하면 비밀값 없이 과제 UUID/경로만 서버에 기록합니다. 완전한 DB 장애나 프로세스 중단 뒤에는 후속 확인이 필요할 수 있습니다.
 
 ## 기술
 
-Next.js 16.4 App Router, React 19, TypeScript, Tailwind CSS 4, shadcn/ui Button/Card, Supabase JS, Zod, Playwright. Supabase SDK와 비밀 키는 서버 전용입니다. Next.js는 상속한 16.2.10의 보안 문제를 해결하기 위해 이 미션 6 브랜치에서 16.4.0으로 갱신했습니다.
+Next.js 16.4 App Router, React 19, TypeScript, Tailwind CSS 4, shadcn/ui 스타일의 Button/Card/AlertDialog, Radix Alert Dialog, Supabase JS, Zod, Sharp, Playwright. 조회는 Server Components, 변경은 Server Actions이며 별도 백엔드 서버를 만들지 않습니다.
 
 ## 테이블
 
-마이그레이션: `supabase/migrations/20261014000100_create_work_records.sql`. 새 로컬 과제 DB에 적용했습니다. 같은 SQL을 다른 기존 프로젝트에 적용하지 않습니다.
+새 과제 DB에 다음 마이그레이션을 순서대로 적용합니다.
 
-| 컬럼 | 타입 | 규칙 |
+1. `supabase/migrations/20261014000100_create_work_records.sql`
+2. `supabase/migrations/20261014000200_record_images.sql`
+
+| work_records 컬럼 | 타입 | 규칙 |
 |---|---|---|
-| id | uuid | PK, 생성 기본값 |
-| site_label | varchar(80) | 필수, trim 길이 1~80 |
+| id | uuid | PK |
+| site_label | varchar(80) | 필수, trim 후 1~80자 |
 | work_date | date | 필수, 1900~2100년 |
-| title | varchar(120) | 필수, trim 길이 1~120 |
+| title | varchar(120) | 필수, trim 후 1~120자 |
 | description | text | 기본 빈 문자열, 최대 2000자 |
-| image_path | text | 선택, 3묶음에서 Storage 연결 |
+| image_path | text | 선택, records/{기록 UUID}/{파일 UUID}.{확장자} |
 | created_at | timestamptz | DB 생성 시각 |
 | updated_at | timestamptz | DB 기본값·수정 트리거 |
 
-RLS 기본 거부, anon/authenticated의 직접 테이블 권한 제거, service_role 권한 명시를 적용했습니다. 로그인/사용자별 권한 정책은 이번 미션에서 구현하지 않습니다. 서버 경유 공용 데모이므로 등록된 내용은 다른 방문자도 볼 수 있습니다.
+내부 파일 정리 테이블 `storage_cleanup_tasks`는 id, record_id, image_path(고유), reason, attempts, created_at으로 구성합니다. 삭제된 기록의 파일도 정리해야 하므로 기록 FK를 두지 않습니다.
+
+두 테이블의 RLS 기본 거부·anon/authenticated 직접 권한 제거·service_role 권한을 적용합니다. 로그인·사용자별 접근 정책은 미션 7 범위입니다. 서버 키는 공용 과제 데이터만 처리합니다.
 
 ## 로컬 실행
 
-Node.js 22 이상과 Docker Desktop Linux 엔진이 필요합니다. Supabase CLI는 로컬 시작 도구에서 2.120.0으로 고정합니다.
+Node.js 22 이상과 Docker Desktop Linux 엔진이 필요합니다. Supabase CLI는 2.120.0으로 고정합니다.
 
 ```bash
 npm ci
 npm run db:start
+npm run db:migrate
 npm run check:db
 npm run seed:demo
 npm run dev -- --hostname 127.0.0.1 --port 3106
@@ -61,20 +80,21 @@ npm run dev -- --hostname 127.0.0.1 --port 3106
 
 - 앱: `http://127.0.0.1:3106`
 - 새 과제 Supabase API: `http://127.0.0.1:56321`
-- 새 과제 Studio: `http://127.0.0.1:56323`
-- DB 포트: 56322, 로컬 project_id: `bluecollar-mission6-demo`
-- 시작 도구는 새 로컬 키만 비추적 .env.local에 설정하고 키를 출력하지 않습니다. 이미 다른 프로젝트 값이 설정돼 있으면 덮어쓰지 않습니다.
-- `seed:demo`는 DB에 개인정보 없는 예시 한 건을 넣으며 기존 기록을 변경하지 않습니다.
+- Studio: `http://127.0.0.1:56323`
+- DB 포트: 56322, project_id: `bluecollar-mission6-demo`
+- 시작 도구는 새 로컬 키를 비추적 .env.local에 설정합니다. 다른 프로젝트 값이 있으면 덮어쓰지 않습니다.
+- seed는 개인정보 없는 가상 예시 2건을 준비합니다. 사진은 코드로 만든 가상 이미지이며 기존 기록을 덮어쓰지 않습니다.
 
 ```bash
+npm run cleanup:images
 npm run db:stop
 ```
 
-위 중지는 미션 6 프로젝트만 대상으로 하며 데이터 볼륨을 유지합니다. Docker 전체 중지·전체 프로젝트 중지는 사용하지 않습니다.
+cleanup은 등록한 과제 DB의 정리 내역에서 UUID 경로를 검증하고 아직 연결된 파일은 지우지 않습니다. 중지는 미션 6 스택만 대상으로 하며 데이터 볼륨을 유지합니다.
 
 ## 환경 변수
 
-`.env.example`에는 이름만 있습니다. 값은 Git에 올리지 않습니다.
+.env.example에는 이름만 있으며 실제 값은 Git·문서에 올리지 않습니다.
 
 | 이름 | 목적 |
 |---|---|
@@ -82,7 +102,7 @@ npm run db:stop
 | SUPABASE_SECRET_KEY | 서버 전용 키. NEXT_PUBLIC 접두사 금지 |
 | NEXT_PUBLIC_SITE_URL | 미션 6 사이트 주소 |
 
-`lib/supabase/demo-project.json`은 공개 가능한 프로젝트 식별자만 기록합니다. 로컬은 127.0.0.1:56321만 허용하며 Vercel에서는 로컬 연결을 거절합니다. 클라우드에서는 사용자가 새 과제 프로젝트임을 확인해 등록한 ref와 URL이 같아야 연결합니다. [클라우드 준비 절차](docs/mission6-supabase-setup.md)를 따릅니다.
+`lib/supabase/demo-project.json`에는 공개 가능한 식별자만 있습니다. 로컬은 127.0.0.1:56321만 허용하며 Vercel에서는 거절합니다. 클라우드는 새 과제 프로젝트의 확인·등록된 ref와 URL이 같아야 연결합니다.
 
 ## 검증
 
@@ -90,11 +110,16 @@ npm run db:stop
 npm run lint
 npm test
 npm run build
+npm run test:db
 npm run test:e2e
 ```
 
-입력·연결 경계 테스트 8개와 실제 로컬 DB 브라우저 검사 5개가 통과했습니다. 브라우저 검사는 등록·상세·새로고침·목록, 11건 페이지네이션, 없는 UUID, 필수값 오류, 모바일 320/375px·데스크톱을 포함합니다. 테스트가 만든 UUID만 정리하며 사용자 데이터를 지우지 않습니다. 세부 근거와 아직 확인하지 않은 항목은 QA 문서에 기록합니다.
+단위 검사 12개, 실제 DB/Storage 검사 7개, 최종 빌드 앱의 브라우저 검사 10개가 통과했습니다. DB 검사에서는 업로드/등록/수정/파일 정리 실패와 저장 응답 유실을 선택적으로 주입해 보상 동작을 확인했습니다. 핵심 정상 데이터는 실제 Supabase에 저장하며 테스트가 만든 UUID/파일만 정리합니다.
+
+`npm run test:states -- empty`는 기본 가상 예시 두 건만 있을 때 임시 분리 후 복원해 빈 화면을 확인합니다. 사용자 기록이 있으면 실행을 거절합니다. 연결 실패 UI는 환경 파일을 바꾸지 않은 테스트용 앱 프로세스로 확인했습니다. 상세 결과·재현 조건은 QA 문서에 있습니다.
 
 ## 배포·제출 상태
 
-GitHub의 `feature/mission6-crud-20261014` 브랜치에서 작업합니다. 자동 Git 배포는 차단돼 있습니다. 클라우드 Supabase 연결과 새 과제용 Vercel 배포는 아직 없습니다. 기존 미션 5 URL을 미션 6 배포 링크로 사용하지 않습니다.
+GitHub `feature/mission6-crud-20261014` 브랜치에 관리하며 자동 Git 배포는 차단합니다. 로컬 Supabase는 클라우드 무료 프로젝트 한도를 소비하지 않습니다. 사용자가 무료 한도를 모두 사용 중이라고 설명했으므로 별도 클라우드 확보 방법을 결정한 후 새 Vercel에 연결해야 합니다.
+
+미션 6 공개 배포 URL은 아직 없습니다. 기존 미션 5 URL을 미션 6 제출 링크로 사용하지 않습니다. 실제 서비스 DB 재사용·미션 5 배포 변경·main 병합은 진행하지 않습니다.

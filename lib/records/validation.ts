@@ -9,7 +9,10 @@ export const recordFields = [
 export type RecordField = (typeof recordFields)[number];
 export type RecordValues = Record<RecordField, string>;
 export type RecordFieldErrors = Partial<
-  Record<RecordField | "submission_id", string[]>
+  Record<
+    RecordField | "submission_id" | "image" | "expected_updated_at",
+    string[]
+  >
 >;
 
 export function isCalendarDate(value: string) {

@@ -9,11 +9,17 @@ import DataUnavailable from "@/components/records/DataUnavailable";
 import { getRecordsPage, RecordsQueryError } from "@/lib/records/data";
 import { listHref, parsePage } from "@/lib/records/pagination";
 import { DemoConfigurationError } from "@/lib/supabase/config";
+import { createDemoClient } from "@/lib/supabase/server";
+import { recordImageUrls } from "@/lib/storage/record-images";
+import CleanupNotice from "@/components/records/CleanupNotice";
 export const metadata: Metadata = { title: "작업기록 목록" };
 export default async function RecordsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string | string[] }>;
+  searchParams: Promise<{
+    page?: string | string[];
+    notice?: string | string[];
+  }>;
 }) {
   await connection();
   const query = await searchParams;
@@ -34,9 +40,14 @@ export default async function RecordsPage({
     throw error;
   }
   if (query.page !== undefined && query.page !== String(result.page))
-    redirect(listHref(result.page));
+    redirect(
+      listHref(result.page) +
+        (query.notice === "cleanup-pending" ? "&notice=cleanup-pending" : ""),
+    );
+  const urls = await recordImageUrls(createDemoClient(), result.records);
   return (
     <>
+      <CleanupNotice notice={query.notice} />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black">작업기록</h1>
@@ -61,7 +72,12 @@ export default async function RecordsPage({
       ) : (
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {result.records.map((record) => (
-            <RecordCard key={record.id} record={record} page={result.page} />
+            <RecordCard
+              key={record.id}
+              record={record}
+              page={result.page}
+              imageUrl={record.image_path ? urls[record.image_path] : undefined}
+            />
           ))}
         </div>
       )}

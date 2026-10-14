@@ -47,7 +47,7 @@ export function DemoNotice() {
       <p className="font-bold">가상의 작업만 기록해주세요.</p>
       <p className="mt-1">
         과제용 공용 공간입니다. 실제 이름·주소·연락처를 입력하지 마세요. 등록한
-        데모 기록은 다른 방문자도 볼 수 있습니다.
+        데모 기록은 다른 방문자도 조회·수정·삭제할 수 있습니다.
       </p>
     </aside>
   );

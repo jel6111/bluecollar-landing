@@ -2,20 +2,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ImageOff } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import DataUnavailable from "@/components/records/DataUnavailable";
 import { getRecord, RecordsQueryError } from "@/lib/records/data";
 import { parsePage, listHref } from "@/lib/records/pagination";
 import { DemoConfigurationError } from "@/lib/supabase/config";
+import { createDemoClient } from "@/lib/supabase/server";
+import { recordImageUrls } from "@/lib/storage/record-images";
+import RecordImage from "@/components/records/RecordImage";
+import DeleteRecordDialog from "@/components/records/DeleteRecordDialog";
+import CleanupNotice from "@/components/records/CleanupNotice";
 export const metadata: Metadata = { title: "작업기록 상세" };
 export default async function RecordDetail({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ page?: string | string[] }>;
+  searchParams: Promise<{
+    page?: string | string[];
+    notice?: string | string[];
+  }>;
 }) {
   await connection();
   const [{ id }, query] = await Promise.all([params, searchParams]);
@@ -37,8 +45,10 @@ export default async function RecordDetail({
     throw error;
   }
   if (!record) notFound();
+  const urls = await recordImageUrls(createDemoClient(), [record]);
   return (
     <>
+      <CleanupNotice notice={query.notice} />
       <Link
         href={listHref(page)}
         className="mb-6 inline-flex items-center gap-2 rounded-lg py-2 text-sm font-bold text-slate-600"
@@ -47,7 +57,7 @@ export default async function RecordDetail({
       </Link>
       <Card>
         <CardContent className="p-5 sm:p-8">
-          <p className="font-bold text-blue-600">{record.site_label}</p>
+          <p className="break-words font-bold text-blue-600">{record.site_label}</p>
           <h1 className="mt-3 break-words text-3xl font-black leading-tight">
             {record.title}
           </h1>
@@ -60,14 +70,11 @@ export default async function RecordDetail({
               {record.description || "등록된 설명이 없습니다."}
             </p>
           </div>
-          <div className="mt-6 flex flex-col items-center gap-2 rounded-xl border border-dashed p-8 text-slate-400">
-            <ImageOff size={28} aria-hidden />
-            <p className="text-sm">
-              {record.image_path
-                ? "사진을 표시할 수 없습니다."
-                : "등록된 사진이 없습니다."}
-            </p>
-          </div>
+          <RecordImage
+            src={record.image_path ? urls[record.image_path] : undefined}
+            hasImage={!!record.image_path}
+            alt={`${record.site_label} 작업 사진`}
+          />
           <dl className="mt-6 text-xs text-slate-500">
             <div className="flex flex-wrap gap-2">
               <dt>등록 시각</dt>
@@ -80,9 +87,30 @@ export default async function RecordDetail({
               </dd>
             </div>
           </dl>
+          <p className="mt-2 text-xs text-slate-500">
+            최종 수정{" "}
+            <time dateTime={record.updated_at}>
+              {new Intl.DateTimeFormat("ko-KR", {
+                timeZone: "Asia/Seoul",
+                dateStyle: "medium",
+                timeStyle: "short",
+              }).format(new Date(record.updated_at))}
+            </time>
+          </p>
         </CardContent>
       </Card>
       <div className="mt-6 flex flex-wrap gap-3">
+        <Button asChild>
+          <Link href={`/records/${record.id}/edit?page=${page}`}>
+            기록 수정
+          </Link>
+        </Button>
+        <DeleteRecordDialog
+          id={record.id}
+          title={record.title}
+          version={record.updated_at}
+          page={page}
+        />
         <Button asChild variant="secondary">
           <Link href={listHref(page)}>목록으로 돌아가기</Link>
         </Button>

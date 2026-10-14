@@ -12,6 +12,26 @@ export type WorkRecord = {
 export type Database = {
   public: {
     Tables: {
+      storage_cleanup_tasks: {
+        Row: {
+          id: string;
+          record_id: string;
+          image_path: string;
+          reason: string;
+          attempts: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          record_id: string;
+          image_path: string;
+          reason: string;
+          attempts?: number;
+          created_at?: string;
+        };
+        Update: { attempts?: number };
+        Relationships: [];
+      };
       work_records: {
         Row: WorkRecord;
         Insert: {

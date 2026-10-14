@@ -4,15 +4,16 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const action = process.argv[2] ?? "start";
-if (!["start", "stop"].includes(action))
-  throw new Error("start 또는 stop만 사용할 수 있습니다.");
+if (!["start", "stop", "migrate"].includes(action))
+  throw new Error("start, stop, migrate만 사용할 수 있습니다.");
 const config = readFileSync(
   new URL("../supabase/config.toml", import.meta.url),
   "utf8",
 );
 if (
   !config.includes('project_id = "bluecollar-mission6-demo"') ||
-  !/\[api\][\s\S]*?port = 56321/.test(config)
+  !/\[api\][\s\S]*?port = 56321/.test(config) ||
+  !/\[db\][\s\S]*?port = 56322/.test(config)
 ) {
   throw new Error("미션 6 전용 로컬 설정을 확인해주세요.");
 }
@@ -43,7 +44,23 @@ function cli(args) {
     );
   }
 }
-if (action === "stop") {
+if (action === "migrate") {
+  const env = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
+  const registration = JSON.parse(
+    readFileSync(
+      new URL("../lib/supabase/demo-project.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  if (
+    registration.mode !== "local" ||
+    registration.projectName !== "bluecollar-mission6-demo" ||
+    env.match(/^SUPABASE_URL=(.*)$/m)?.[1]?.trim() !== "http://127.0.0.1:56321"
+  )
+    throw new Error("지정된 과제 로컬 DB에서만 마이그레이션할 수 있습니다.");
+  cli(["migration", "up", "--local"]);
+  console.log("미션 6 로컬 DB에 새 마이그레이션을 적용했습니다.");
+} else if (action === "stop") {
   cli(["stop", "--project-id", "bluecollar-mission6-demo"]);
   console.log("미션 6 로컬 스택만 중지했습니다. 데이터 볼륨은 유지됩니다.");
 } else {

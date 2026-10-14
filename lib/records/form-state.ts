@@ -7,3 +7,4 @@ export type RecordFormState = {
   submissionId: string;
   fieldErrors: RecordFieldErrors;
 };
+export type DeleteFormState = { message: string };
