@@ -9,8 +9,8 @@
 | GitHub | `jel6111/bluecollar-landing` | 공개 제출용 저장소 |
 | 브랜치 | `feature/mission6-crud-20261014` | 미션 5 head `1e403c7`에서 생성 |
 | 체크아웃 | `work/bluecollar-mission6` | 새 클론, 비추적 파일 복사 없음 |
-| 로컬 포트 | `3106` | 실행 설정만 준비, 실행하지 않음 |
-| Supabase | 새 `bluecollar-mission6-demo` | 아직 생성하지 않음 |
+| 로컬 포트 | `3106` | 2묶음 앱 실행·브라우저 검증 |
+| Supabase | 새 로컬 `bluecollar-mission6-demo` | Docker 스택 생성·테이블 적용. 클라우드는 아직 없음 |
 | Storage | 새 프로젝트의 `work-record-images` | 아직 생성하지 않음 |
 | Vercel | 새 `bluecollar-mission6-demo` | 아직 생성하지 않음 |
 | 분석·문의·메시징 | 연결 없음 | 운영 계정 사용 금지 |
@@ -37,14 +37,14 @@
 
 | 항목 | 값 |
 |---|---|
-| Supabase 계정/조직 | 미정 |
-| Supabase 이름 | 예정: `bluecollar-mission6-demo` |
-| Supabase project ref | 미발급 |
+| Supabase 계정/조직 | 로컬 Docker는 계정 없이 실행. 클라우드 미정 |
+| Supabase 이름 | 로컬 생성: `bluecollar-mission6-demo`. 같은 이름의 새 클라우드 예정 |
+| Supabase project ref | 클라우드 미발급. 로컬 project_id는 `bluecollar-mission6-demo` |
 | Vercel 계정/팀 | 미정 |
 | Vercel 이름 | 예정: `bluecollar-mission6-demo` |
 | Vercel project ID | 미발급 |
 | 미션 6 URL | 미발급 |
-| 확인 날짜·근거 | 다음 묶음에서 생성 후 기록 |
+| 확인 날짜·근거 | 2026-10-14: 새 로컬 API/DB/Studio 포트 56321/56322/56323, 테이블 SQL 적용·브라우저 테스트 |
 
 ## 자동 배포 차단
 
@@ -58,6 +58,15 @@
 
 공식 근거: [Vercel Git configuration](https://vercel.com/docs/project-configuration/git-configuration).
 
-## 1묶음 변경 범위
+## 1묶음 당시 변경 범위
 
 새 체크아웃·브랜치, README/컨텍스트/명세/QA 문서, 값 없는 환경 변수 예시, 실행 위치·포트, Git 자동 배포 차단. Supabase/Vercel 생성·연결·데이터 변경·앱 실행·배포는 진행하지 않는다.
+
+## 2묶음 확인
+
+- 실행 전에 실제 카카오톡·서비스·분석·문의 연결을 제거했다. 사이트 주소의 운영 도메인은 연결 거부 목록으로만 남아 있다.
+- Docker의 새 미션 6 스택만 생성했다. 기존 컨테이너의 데이터·설정은 조회/변경하지 않았다. 중지/재시작도 `bluecollar-mission6-demo`만 지정했다.
+- 새 로컬 키를 비추적 `.env.local`에 설정했다. `lib/supabase/demo-project.json`에는 키가 아닌 로컬 허용 주소와 프로젝트 이름만 있다.
+- 테이블의 RLS 활성·anon 조회/등록 권한 없음·service_role 등록 권한을 새 과제 컨테이너에서 확인했다.
+- 클라우드 연결 도구·CLI 로그인·브라우저 제어가 준비되지 않았다. 전체 Supabase 프로젝트 목록 조회는 자동 승인 검토가 거부해 실행하지 않았다. 운영 메타데이터를 조회하는 우회 없이 로컬 Supabase로 핵심 흐름을 검증했다.
+- Vercel 연결 파일·새 프로젝트·배포 URL은 아직 없다. 브랜치 자동 배포 차단은 유지한다.
