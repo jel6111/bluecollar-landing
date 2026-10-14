@@ -1,14 +1,50 @@
 @AGENTS.md
 
-# 블루칼라 랜딩 · 미션 5 작업 맥락
+# 블루칼라 미션 6 · 과제용 작업 맥락
 
-- 목적: 40~60대 현장 기공이 카카오톡에서 블루칼라를 시작해 사진을 기록·보고하고, 나중에 보관함과 포트폴리오로 재사용하도록 안내한다.
-- 제품은 이미 `jel6111/parancollar`에 구현되어 있다. 랜딩의 문구·CTA·예시 화면이 실제 제품과 다르면 제품을 기준으로 바로잡는다.
-- 핵심 CTA는 `https://pf.kakao.com/_GnafX/chat`이다. 별도 신청 설문이나 가입을 첫 행동으로 끼워 넣지 않는다.
-- 실제 서비스 랜딩 기준으로 카카오톡 채널에서 무료로 시작한다. 보관함의 기록과 보고 링크의 수신자 열람을 구분하고, 포트폴리오에 공개할 사진은 사용자가 직접 고른다고 설명한다.
-- 미션 3 검증 결과는 사용자 응답 0건, 베타 사용 0명이다. 아직 검증하지 않은 수요·사용자 평가·성과를 만들어 쓰지 않는다.
-- 미션 4 시안: `https://www.figma.com/design/b1dSePgftJ6gBZuVJZUlmY/정이레?node-id=85-2`. 핵심 흐름은 기록 정리 → 보고 미리보기 → 로그인 없는 외부 열람이다. 보관함·포트폴리오는 축적 가치다.
-- 기술: Next.js 16 App Router, TypeScript, Tailwind CSS 4, shadcn/ui 방식의 `components/ui`, Vercel. 반복 UI는 컴포넌트화한다.
-- 디자인: Noto Sans KR, 파랑 `#2563EB`, 진한 텍스트 `#0F172A`, 연한 표면 `#F8FAFC`, 큰 버튼과 쉬운 문장. 모바일 320px부터 가로 넘침 없이 작동하게 한다.
-- 제공받은 실제 제품 화면 캡처는 `public/product-*.jpg`, 로고는 `public/logo.png`와 `app/icon.png`에 있다. 화면 속 이름·날짜·사진 수는 제품 예시로만 다루고, 실제 사용자 성과로 오해될 숫자나 후기는 넣지 않는다.
-- 환경 변수의 실제 값·토큰은 저장소와 문서에 넣지 않는다. `npm run lint`, `npm run build`, 모바일·데스크톱 CTA 점검 후 변경한다.
+목적은 가상의 현장 작업기록 1건의 등록 → 목록 → 상세 → 수정 → 삭제를 Next.js와 Supabase에 연결하는 제출용 데모다. 브라우저 폼에서 현장 별칭, 작업일, 제목, 설명, 사진 1장을 입력한다.
+
+현재는 1묶음(작업 공간 분리와 명세)만 진행한다. CRUD 구현, Supabase/Storage 생성·연결, Vercel 생성·배포는 아직 없다. 미션 5에서 상속한 화면을 미션 6 완료 결과로 표시하지 않는다.
+
+## 작업 대상과 보호 범위
+
+- 원격: `https://github.com/jel6111/bluecollar-landing.git`
+- 브랜치: `feature/mission6-crud-20261014`
+- 시작점: 미션 5 head `1e403c792345107edd67aab9fc94090b7376528b`
+- 새 체크아웃: `work/bluecollar-mission6`, 로컬 포트 `3106`
+- 새 자원 예정 이름: Supabase와 Vercel 각각 `bluecollar-mission6-demo`
+- 실제 서비스 및 미션 5 자원의 경계와 연결 순서는 `docs/mission6-isolation.md`를 따른다.
+- 실제 서비스의 코드·데이터·환경 변수·카카오톡·분석 계정을 조회하거나 재사용하지 않는다.
+- 실제 서비스 CTA, 분석 및 문의 연동은 다음 묶음의 첫 코드 변경에서 제거한 뒤 개발 서버를 실행한다.
+- `vercel.json`의 미션 6 브랜치 자동 배포 차단을 유지한다.
+
+## 화면과 테이블
+
+- `/`: 과제 데모 안내와 내부 `/records` CTA.
+- `/records?page=1`: 10건씩, 최신 생성순, 목록·페이지 탐색·빈 상태.
+- `/records/new`: 등록 폼.
+- `/records/[id]`: 상세·수정/삭제 진입·없는 ID 안내.
+- `/records/[id]/edit`: 저장값을 미리 채운 수정 폼.
+- `work_records`: uuid PK, `site_label`(1~80자), `work_date`(date), `title`(1~120자), `description`(0~2000자), 선택 `image_path`, DB 제어 `created_at`/`updated_at`.
+- Storage `work-record-images`: private, 사진 1장, JPEG/PNG/WebP, 최대 3 MiB. 상세는 서버에서 발급한 제한시간 URL로 표시.
+
+## 구현 규칙
+
+- 기존 Next.js 16 App Router, React 19, TypeScript, Tailwind 4, shadcn/ui를 활용한다.
+- Server Components에서 조회, Server Actions에서 등록·수정·삭제·사진 포함 폼을 처리한다.
+- 서버 전용 Supabase 클라이언트에는 `server-only`를 사용한다. `SUPABASE_SECRET_KEY`를 브라우저에 전달하지 않는다.
+- 새 과제용 Supabase ref를 연결 기록과 코드의 허용 대상으로 확정한다. URL/ref가 미등록·불일치하면 연결을 시작하지 않는다.
+- 로그인·사용자별 RLS 정책은 미션 7 범위다. 테이블의 기본 RLS 거부 상태를 유지하고 공개 anon CRUD 정책을 만들지 않는다. 서버 경유 공용 데모는 모든 방문자가 기록을 변경할 수 있다는 안내를 둔다.
+- 필드 trim·길이·날짜·UUID, 이미지 실제 형식·크기를 서버에서 최종 검증하고 DB에도 제약을 둔다.
+- 이미지 업로드와 DB 작업은 원자적 트랜잭션이 아니다. 실패 보상과 파일 정리는 `mission6-plan`을 따른다.
+- 목록 정렬은 `created_at DESC, id DESC`. 페이지를 URL에 보존하고 변경 후 목록·상세 경로를 재검증한다.
+- 핵심 데이터의 최종 저장소는 Supabase다. Mock/localStorage를 최종 저장소로 쓰지 않는다.
+- DB/Storage에는 가상 자료만 사용하고 이름·주소·전화번호·사람 얼굴·운영 데이터를 저장하지 않는다.
+- 확인 결과는 `docs/mission6-qa.md`에 완료/미확인/실패로 구분한다. 미션 5 QA를 미션 6 통과 증거로 사용하지 않는다.
+- 사용자 수요·이용 성과를 만들어 쓰지 않는다.
+
+## 문서
+
+- 기능·화면·데이터 명세: `docs/mission6-plan.md`
+- 자원 분리·식별자 확인: `docs/mission6-isolation.md`
+- 단계별 QA: `docs/mission6-qa.md`
