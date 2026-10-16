@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { Plus } from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { createRecord, updateRecord } from "@/app/records/actions";
 import { Button } from "@/components/ui/button";
@@ -110,61 +111,6 @@ export default function RecordForm({
       <input type="hidden" name="expected_updated_at" value={version} />
       <input type="hidden" name="page" value={page} />
       <div>
-        <label htmlFor="site_label" className="font-bold">
-          현장 별칭 <span className="text-blue-600">(필수)</span>
-        </label>
-        <input
-          {...propsFor("site_label")}
-          className={inputClass}
-          required
-          maxLength={80}
-          placeholder="예: A현장"
-          autoComplete="off"
-        />
-        {errorFor("site_label")}
-      </div>
-      <div>
-        <label htmlFor="work_date" className="font-bold">
-          작업일 <span className="text-blue-600">(필수)</span>
-        </label>
-        <input
-          {...propsFor("work_date")}
-          className={inputClass}
-          type="date"
-          required
-          min="1900-01-01"
-          max="2100-12-31"
-        />
-        {errorFor("work_date")}
-      </div>
-      <div>
-        <label htmlFor="title" className="font-bold">
-          작업 제목 <span className="text-blue-600">(필수)</span>
-        </label>
-        <input
-          {...propsFor("title")}
-          className={inputClass}
-          required
-          maxLength={120}
-          placeholder="예: 욕실 타일 점검"
-          autoComplete="off"
-        />
-        {errorFor("title")}
-      </div>
-      <div>
-        <label htmlFor="description" className="font-bold">
-          작업 설명 <span className="font-normal text-slate-500">(선택)</span>
-        </label>
-        <textarea
-          {...propsFor("description")}
-          className={inputClass}
-          rows={5}
-          maxLength={2000}
-          placeholder="가상의 작업 내용을 적어주세요."
-        />
-        {errorFor("description")}
-      </div>
-      <div>
         <label htmlFor="image" className="font-bold">
           작업 사진 <span className="font-normal text-slate-500">(선택)</span>
         </label>
@@ -255,6 +201,72 @@ export default function RecordForm({
             {photoError}
           </p>
         )}
+      </div>
+      <div>
+        <label htmlFor="site_label" className="font-bold">
+          현장 이름 <span className="text-blue-600">(필수)</span>
+        </label>
+        <input
+          {...propsFor("site_label")}
+          className={inputClass}
+          required
+          maxLength={80}
+          placeholder="예: A현장"
+          autoComplete="off"
+        />
+        {errorFor("site_label")}
+      </div>
+      <div>
+        <label htmlFor="description" className="font-bold">
+          사진 설명 <span className="font-normal text-slate-500">(선택)</span>
+        </label>
+        <textarea
+          {...propsFor("description")}
+          className={inputClass}
+          rows={3}
+          maxLength={2000}
+          placeholder="무슨 작업이었나요? 짧아도 됩니다."
+        />
+        <div className="mt-3 flex flex-wrap gap-2">
+          {["작업 완료했습니다", "확인 부탁드립니다", "작업 전 상태입니다"].map((phrase) => (
+            <button key={phrase} type="button" disabled={pending}
+              onClick={() => setValues((current) => ({ ...current, description: phrase }))}
+              className="inline-flex min-h-11 items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50">
+              <Plus size={14} aria-hidden />{phrase}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-sm text-slate-600">문구를 누르면 설명칸에 들어갑니다. 아래 저장 버튼으로 기록을 남겨주세요.</p>
+        {errorFor("description")}
+      </div>
+      <div>
+        <label htmlFor="work_date" className="font-bold">
+          기록 날짜 <span className="text-blue-600">(필수)</span>
+        </label>
+        <input
+          {...propsFor("work_date")}
+          aria-describedby={"work-date-help" + (state.fieldErrors.work_date ? " work_date-error" : "")}
+          className={inputClass}
+          type="date"
+          required
+          min="1900-01-01"
+          max="2100-12-31"
+        />
+        <p id="work-date-help" className="mt-2 text-sm leading-relaxed text-slate-600">직접 선택하는 참고 날짜입니다. 기록 등록일은 저장할 때 따로 남습니다.</p>
+        {errorFor("work_date")}
+      </div>
+      <div>
+        <label htmlFor="title" className="font-bold">
+          기록 제목 <span className="font-normal text-slate-500">(선택)</span>
+        </label>
+        <input
+          {...propsFor("title")}
+          className={inputClass}
+          maxLength={120}
+          placeholder="비우면 설명이나 현장 이름으로 제목을 만듭니다."
+          autoComplete="off"
+        />
+        {errorFor("title")}
       </div>
       <div aria-live="polite" aria-atomic="true">
         {state.message && (

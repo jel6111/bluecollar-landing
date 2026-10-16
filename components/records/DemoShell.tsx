@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/public/logo.png";
-import { Button } from "@/components/ui/button";
 
 export function DemoHeader() {
   return (
@@ -30,11 +29,8 @@ export function DemoHeader() {
             href="/records"
             className="rounded-lg px-2 py-3 text-sm font-bold text-slate-600 hover:text-blue-600"
           >
-            기록 목록
+            기록 관리
           </Link>
-          <Button asChild className="px-3 text-sm">
-            <Link href="/records/new">새 기록</Link>
-          </Button>
         </nav>
       </div>
     </header>

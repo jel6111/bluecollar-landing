@@ -23,7 +23,7 @@ export default function RecordImage({
     <div
       className={
         compact
-          ? "mt-5 overflow-hidden rounded-xl bg-slate-50"
+          ? "overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
           : "mt-6 overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
       }
     >
@@ -36,7 +36,7 @@ export default function RecordImage({
           unoptimized
           className={
             compact
-              ? "h-40 w-full object-cover"
+              ? "aspect-square w-full object-cover"
               : "max-h-[520px] w-full object-contain"
           }
           onError={() => setFailedSource(src)}
@@ -45,12 +45,12 @@ export default function RecordImage({
         <div
           className={
             compact
-              ? "flex h-40 flex-col items-center justify-center gap-2 text-slate-500"
+              ? "flex aspect-square flex-col items-center justify-center gap-2 px-2 text-center text-slate-500"
               : "flex flex-col items-center gap-3 px-5 py-10 text-center text-slate-500"
           }
         >
           <ImageOff size={compact ? 22 : 28} aria-hidden />
-          <p className="text-sm">
+          <p className={compact ? "text-xs" : "text-sm"}>
             {hasImage
               ? "사진을 불러오지 못했습니다."
               : "등록된 사진이 없습니다."}

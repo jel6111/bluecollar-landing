@@ -55,7 +55,7 @@ test("운영 외부 링크 없이 랜딩과 필수값 오류를 표시한다", a
   );
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /오늘의 작업을/, level: 1 }),
+    page.getByRole("heading", { name: /현장 사진/, level: 1 }),
   ).toBeVisible();
   const links = await page
     .locator("a")
@@ -65,16 +65,14 @@ test("운영 외부 링크 없이 랜딩과 필수값 오류를 표시한다", a
   expect(links.every((url) => url.startsWith("http://127.0.0.1:3106"))).toBe(
     true,
   );
-  await page.getByRole("link", { name: "새 기록 작성", exact: true }).click();
-  await page.getByLabel(/현장 별칭/).fill("   ");
-  await page.getByLabel(/작업 제목/).fill("   ");
+  await page.getByRole("link", { name: "사진 추가하기", exact: true }).click();
+  await page.getByLabel(/현장 이름/).fill("   ");
+  await page.getByLabel(/기록 제목/).fill("   ");
   await page.getByRole("button", { name: "기록 저장" }).click();
   await expect(
-    page.getByText("현장 별칭을 입력해주세요.", { exact: true }),
+    page.getByText("현장 이름을 입력해주세요.", { exact: true }),
   ).toBeVisible();
-  await expect(
-    page.getByText("작업 제목을 입력해주세요.", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByLabel(/기록 제목/)).toHaveValue("   ");
   expect(forbidden).toEqual([]);
 });
 
@@ -83,11 +81,11 @@ test("브라우저 등록이 DB·상세·새로고침·목록에 유지된다", 
   await page.goto("/records/new");
   const id = await page.locator('input[name="submission_id"]').inputValue();
   createdIds.push(id);
-  await page.getByLabel(/현장 별칭/).fill("QA 가상 A현장");
-  await page.getByLabel(/작업일/).fill("2026-10-14");
-  await page.getByLabel(/작업 제목/).fill(title);
+  await page.getByLabel(/현장 이름/).fill("QA 가상 A현장");
+  await page.getByLabel(/기록 날짜/).fill("2026-10-14");
+  await page.getByLabel(/기록 제목/).fill(title);
   await page
-    .getByLabel(/작업 설명/)
+    .getByLabel(/사진 설명/)
     .fill("실제 현장과 관계없는 테스트 내용입니다.");
   await page.getByRole("button", { name: "기록 저장" }).dblclick();
   await expect(page).toHaveURL(new RegExp(`/records/${id}\\?page=1$`));
@@ -136,10 +134,10 @@ test("실제 DB의 11건을 10건씩 조회하고 페이지 범위를 조정한�
   const inserted = await db.from("work_records").insert(rows);
   expect(inserted.error).toBeNull();
   await page.goto("/records?page=1");
-  await expect(page.getByRole("link", { name: /상세 보기/ })).toHaveCount(10);
+  await expect(page.getByRole("link", { name: /기록 열기/ })).toHaveCount(10);
   await page.getByRole("link", { name: "다음 페이지", exact: true }).click();
   await expect(page).toHaveURL(/page=2$/);
-  await expect(page.getByRole("link", { name: /상세 보기/ })).toHaveCount(
+  await expect(page.getByRole("link", { name: /기록 열기/ })).toHaveCount(
     Math.min(10, total - 10),
   );
   await page.reload();
@@ -217,8 +215,8 @@ test("사진 등록·유지·교체·제거·추가와 수정·삭제가 브라�
   await page.goto("/records/new");
   const id = await page.locator('input[name="submission_id"]').inputValue();
   createdIds.push(id);
-  await page.getByLabel(/현장 별칭/).fill("QA 사진현장");
-  await page.getByLabel(/작업 제목/).fill("QA 사진 CRUD");
+  await page.getByLabel(/현장 이름/).fill("QA 사진현장");
+  await page.getByLabel(/기록 제목/).fill("QA 사진 CRUD");
   await page.getByLabel(/작업 사진/).setInputFiles(await photoFile());
   await expect(page.getByAltText("선택한 작업 사진 미리보기")).toBeVisible();
   await page.getByRole("button", { name: "기록 저장", exact: true }).click();
@@ -239,8 +237,8 @@ test("사진 등록·유지·교체·제거·추가와 수정·삭제가 브라�
   ).toBeVisible();
   await independent.close();
 
-  await page.getByRole("link", { name: "기록 수정", exact: true }).click();
-  await page.getByLabel(/작업 제목/).fill("QA 사진 CRUD 수정");
+  await page.getByRole("link", { name: "고치기", exact: true }).click();
+  await page.getByLabel(/기록 제목/).fill("QA 사진 CRUD 수정");
   await page.getByRole("button", { name: "수정 내용 저장" }).click();
   await expect(
     page.getByRole("heading", { name: "QA 사진 CRUD 수정", exact: true }),
@@ -252,20 +250,20 @@ test("사진 등록·유지·교체·제거·추가와 수정·삭제가 브라�
   await expect(page.getByRole("heading", { name: "QA 사진 CRUD 수정", exact: true })).toBeVisible();
   await page.locator(`a[href="/records/${id}?page=1"]`).click();
 
-  await page.getByRole("link", { name: "기록 수정", exact: true }).click();
+  await page.getByRole("link", { name: "고치기", exact: true }).click();
   await page
     .getByLabel(/작업 사진/)
     .setInputFiles(await photoFile("webp", "#dc2626"));
   await page.getByRole("button", { name: "수정 내용 저장" }).click();
   await expect(
-    page.getByRole("link", { name: "기록 수정", exact: true }),
+    page.getByRole("link", { name: "고치기", exact: true }),
   ).toBeVisible();
   const replaced = await savedRecord(id);
   expect(replaced.image_path).not.toBe(original.image_path);
   expect(replaced.image_path.endsWith(".webp")).toBe(true);
   expect(await imageFiles(id)).toHaveLength(1);
 
-  await page.getByRole("link", { name: "기록 수정", exact: true }).click();
+  await page.getByRole("link", { name: "고치기", exact: true }).click();
   await page.getByLabel("저장할 때 기존 사진 제거").check();
   await page.getByRole("button", { name: "수정 내용 저장" }).click();
   await expect(
@@ -273,7 +271,7 @@ test("사진 등록·유지·교체·제거·추가와 수정·삭제가 브라�
   ).toBeVisible();
   expect((await savedRecord(id)).image_path).toBeNull();
   expect(await imageFiles(id)).toHaveLength(0);
-  await page.getByRole("link", { name: "기록 수정", exact: true }).click();
+  await page.getByRole("link", { name: "고치기", exact: true }).click();
   await page
     .getByLabel(/작업 사진/)
     .setInputFiles(await photoFile("jpeg", "#16a34a"));
@@ -317,8 +315,8 @@ test("큰 파일·손상된 사진을 거절하고 실패한 폼의 텍스트·�
   await page.goto("/records/new");
   const id = await page.locator('input[name="submission_id"]').inputValue();
   createdIds.push(id);
-  await page.getByLabel(/현장 별칭/).fill("QA 검증현장");
-  await page.getByLabel(/작업 제목/).fill("QA 입력 유지");
+  await page.getByLabel(/현장 이름/).fill("QA 검증현장");
+  await page.getByLabel(/기록 제목/).fill("QA 입력 유지");
   await page.getByLabel(/작업 사진/).setInputFiles({
     name: "large.png",
     mimeType: "image/png",
@@ -337,17 +335,16 @@ test("큰 파일·손상된 사진을 거절하고 실패한 폼의 텍스트·�
   });
   await page.getByRole("button", { name: "기록 저장", exact: true }).click();
   await expect(page.getByText(/사진을 읽을 수 없습니다/)).toBeVisible();
-  await expect(page.getByLabel(/작업 제목/)).toHaveValue("QA 입력 유지");
+  await expect(page.getByLabel(/기록 제목/)).toHaveValue("QA 입력 유지");
   expect(await savedRecord(id)).toBeNull();
 
   await page.getByLabel(/작업 사진/).setInputFiles(await photoFile());
-  await page.getByLabel(/작업 제목/).fill("   ");
+  await page.getByLabel(/현장 이름/).fill("   ");
   await page.getByRole("button", { name: "기록 저장", exact: true }).click();
-  await expect(
-    page.getByText("작업 제목을 입력해주세요.", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText("현장 이름을 입력해주세요.", { exact: true })).toBeVisible();
   await expect(page.getByAltText("선택한 작업 사진 미리보기")).toBeVisible();
-  await page.getByLabel(/작업 제목/).fill("QA 입력 유지 재저장");
+  await page.getByLabel(/현장 이름/).fill("QA 보존 현장");
+  await page.getByLabel(/기록 제목/).fill("QA 입력 유지 재저장");
   await page.getByRole("button", { name: "기록 저장", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "QA 입력 유지 재저장", exact: true }),
@@ -375,17 +372,17 @@ test("동시에 열린 오래된 수정·삭제 폼은 최신 기록을 덮어�
   await page.goto(`/records/${id}/edit`);
   const stale = await context.newPage();
   await stale.goto(`/records/${id}/edit`);
-  await page.getByLabel(/작업 제목/).fill("QA 최신 내용");
+  await page.getByLabel(/기록 제목/).fill("QA 최신 내용");
   await page.getByRole("button", { name: "수정 내용 저장" }).click();
   await expect(
     page.getByRole("heading", { name: "QA 최신 내용", exact: true }),
   ).toBeVisible();
-  await stale.getByLabel(/작업 제목/).fill("QA 오래된 덮어쓰기");
+  await stale.getByLabel(/기록 제목/).fill("QA 오래된 덮어쓰기");
   await stale.getByRole("button", { name: "수정 내용 저장" }).click();
   await expect(
     stale.getByText(/다른 화면에서 기록이 변경되었습니다/),
   ).toBeVisible();
-  await expect(stale.getByLabel(/작업 제목/)).toHaveValue("QA 오래된 덮어쓰기");
+  await expect(stale.getByLabel(/기록 제목/)).toHaveValue("QA 오래된 덮어쓰기");
   expect((await savedRecord(id)).title).toBe("QA 최신 내용");
   await stale.close();
 
@@ -439,7 +436,7 @@ test("마지막 페이지의 기록을 삭제하면 남은 마지막 유효 페�
     .getByRole("button", { name: "삭제하기", exact: true })
     .click();
   await expect(page).toHaveURL(new RegExp(`/records\\?page=${lastPage - 1}$`));
-  await expect(page.getByRole("link", { name: /상세 보기/ })).toHaveCount(10);
+  await expect(page.getByRole("link", { name: /기록 열기/ })).toHaveCount(10);
 });
 
 test("사진 응답 실패 후 재조회하고 긴 입력도 상세·수정·삭제 화면을 넘치지 않는다", async ({
@@ -504,11 +501,43 @@ test("사진 응답 실패 후 재조회하고 긴 입력도 상세·수정·삭
       .getByRole("alertdialog")
       .getByRole("button", { name: "취소", exact: true })
       .click();
-    await page.getByRole("link", { name: "기록 수정", exact: true }).click();
+    await page.getByRole("link", { name: "고치기", exact: true }).click();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
   }
+});
+
+test("짧은 문구와 사진만으로 제목 없이 저장하고 참고 날짜와 등록일을 구분한다", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "사용 흐름 보기", exact: true }).click();
+  await expect(page).toHaveURL(/#service-flow$/);
+  await expect(page.getByRole("heading", { name: /사진 한 장에서/ })).toBeInViewport();
+  await page.getByRole("link", { name: "사진 기록 체험하기", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "기록 관리", exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "사진 추가", exact: true }).click();
+  const id = await page.locator('input[name="submission_id"]').inputValue();
+  createdIds.push(id);
+  await page.getByLabel(/작업 사진/).setInputFiles(await photoFile());
+  await page.getByLabel(/현장 이름/).fill("QA 사진 중심 가상현장");
+  await page.getByRole("button", { name: "확인 부탁드립니다", exact: true }).click();
+  await expect(page.getByLabel(/사진 설명/)).toHaveValue("확인 부탁드립니다");
+  await page.getByLabel(/기록 날짜/).fill("2020-01-01");
+  await expect(page.getByLabel(/기록 제목/)).toHaveValue("");
+  await page.getByRole("button", { name: "기록 저장", exact: true }).click();
+  await expect(page).toHaveURL(new RegExp("/records/" + id + "\\?page=1$"));
+  const row = await savedRecord(id);
+  expect(row.title).toBe("확인 부탁드립니다");
+  expect(row.description).toBe("확인 부탁드립니다");
+  expect(row.work_date).toBe("2020-01-01");
+  expect(row.created_at.startsWith("2020")).toBe(false);
+  await expect(page.getByAltText("QA 사진 중심 가상현장 작업 사진")).toBeVisible();
+  await expect(page.getByText("직접 선택한 기록 날짜", { exact: true })).toBeVisible();
+  await expect(page.locator('time[datetime="2020-01-01"]')).toBeVisible();
+  await page.getByRole("link", { name: "목록으로 돌아가기", exact: true }).click();
+  const card = page.getByRole("link").filter({ has: page.getByRole("heading", { name: "확인 부탁드립니다", exact: true }) });
+  await expect(card).toContainText("등록일");
+  await expect(card).not.toContainText("2020-01-01");
 });

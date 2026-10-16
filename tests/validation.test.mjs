@@ -43,7 +43,6 @@ test("달력에 없는 날짜와 지원 범위 밖 날짜를 거절한다", () =
 test("공백만인 필수값과 길이 초과를 거절한다", () => {
   for (const [field, value] of [
     ["site_label", " "],
-    ["title", "\t"],
     ["site_label", "가".repeat(81)],
     ["title", "가".repeat(121)],
     ["description", "가".repeat(2001)],
@@ -168,3 +167,9 @@ test("로컬 과제는 지정된 포트만 허용하고 Vercel에서는 거절�
     DemoConfigurationError,
   );
 });
+
+ test("선택 제목을 생략하면 설명 첫 줄 또는 현장 이름으로 저장 제목을 만든다", () => {
+  assert.equal(createRecordSchema.parse({ ...valid, title: " ", description: " 짧은 설명\n둘째 줄 " }).title, "짧은 설명");
+  assert.equal(createRecordSchema.parse({ ...valid, title: "", description: "" }).title, "A현장 기록");
+  assert.equal(createRecordSchema.parse({ ...valid, title: "", description: "가".repeat(2000) }).title.length, 120);
+ });

@@ -15,6 +15,9 @@
 - 3묶음의 CRUD/사진/파일 정리는 로컬에서 검증했다. 정리 큐의 검증된 UUID 경로만 처리하고 연결 중인 사진은 지우지 않는다.
 - 사용자는 무료 클라우드 한도를 모두 사용 중이라고 설명했다. 운영 프로젝트 재사용/중지/삭제나 유료 결제를 자원 확보 수단으로 자동 실행하지 않는다.
 
+- 사진 중심 UI는 `docs/mission6-reference-alignment.md`를 따른다. 제목은 선택이고 work_date 참고 날짜와 created_at 등록일을 구분한다.
+- 사용자는 운영 자원 공유 논의를 보류했다. 2026-10-16 현재 요청은 Supabase를 제외한 문서 정리·코드 검증·미션 6 브랜치 커밋/푸시다. DB/Storage/환경 변수/배포를 변경하지 않는다.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

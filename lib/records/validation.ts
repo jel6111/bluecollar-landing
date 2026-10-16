@@ -33,21 +33,24 @@ export const createRecordSchema = z.object({
   site_label: z
     .string()
     .trim()
-    .min(1, "현장 별칭을 입력해주세요.")
-    .max(80, "현장 별칭은 80자 이내로 입력해주세요."),
+    .min(1, "현장 이름을 입력해주세요.")
+    .max(80, "현장 이름은 80자 이내로 입력해주세요."),
   work_date: z
     .string()
-    .refine(isCalendarDate, "작업일을 올바른 날짜로 입력해주세요."),
+    .refine(isCalendarDate, "기록 날짜를 올바른 날짜로 입력해주세요."),
   title: z
     .string()
     .trim()
-    .min(1, "작업 제목을 입력해주세요.")
-    .max(120, "작업 제목은 120자 이내로 입력해주세요."),
+    .max(120, "기록 제목은 120자 이내로 입력해주세요."),
   description: z
     .string()
     .trim()
     .max(2000, "설명은 2000자 이내로 입력해주세요."),
-});
+}).transform((record) => ({
+  ...record,
+  // 제목은 추가 입력이다. 생략해도 DB에는 설명 첫 줄 또는 현장명을 저장한다.
+  title: record.title || record.description.split(/\r?\n/)[0].slice(0, 120) || `${record.site_label} 기록`,
+}));
 
 export function extractRecordValues(formData: FormData): RecordValues {
   const result = {} as RecordValues;

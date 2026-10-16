@@ -12,9 +12,9 @@ if (
 }
 export const SITE = {
   name: "블루칼라 미션 6 데모",
-  title: "블루칼라 미션 6 | 현장 작업기록 데모",
+  title: "블루칼라 미션 6 | 현장 사진 기록 체험",
   description:
-    "가상의 현장 작업기록을 등록하고 다시 확인하는 과제 제출용 데모입니다.",
+    "블루칼라의 사진 기록 흐름을 소개하고, 가상의 현장 사진과 설명을 저장·조회·수정·삭제하는 과제 제출용 데모입니다.",
   url: siteUrl.origin,
   recordsPath: "/records",
 } as const;

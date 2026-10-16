@@ -9,7 +9,7 @@ import { parsePage } from "@/lib/records/pagination";
 import { DemoConfigurationError } from "@/lib/supabase/config";
 import { createDemoClient } from "@/lib/supabase/server";
 import { recordImageUrls } from "@/lib/storage/record-images";
-export const metadata: Metadata = { title: "작업기록 수정" };
+export const metadata: Metadata = { title: "기록 고치기" };
 export default async function EditRecordPage({
   params,
   searchParams,
@@ -39,9 +39,9 @@ export default async function EditRecordPage({
   const urls = await recordImageUrls(createDemoClient(), [record]);
   return (
     <>
-      <h1 className="text-3xl font-black">작업기록 수정</h1>
+      <h1 className="text-3xl font-extrabold">기록 고치기</h1>
       <p className="mt-3 text-slate-500">
-        저장된 내용을 확인하고 수정해주세요.
+        사진과 설명을 확인하고 필요한 부분을 고쳐주세요.
       </p>
       <Card className="mt-8 max-w-2xl">
         <CardContent className="p-5 sm:p-8">

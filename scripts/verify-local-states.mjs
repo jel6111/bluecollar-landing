@@ -39,13 +39,13 @@ try {
     await expect(page.getByText("작업기록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.",{exact:true})).toBeVisible();
     await page.goto("http://127.0.0.1:3106/records/new");
     const id=await page.locator('input[name="submission_id"]').inputValue();
-    await page.getByLabel(/현장 별칭/).fill("QA 오류 검증 현장");
-    await page.getByLabel(/작업 제목/).fill("QA 입력 보존");
+    await page.getByLabel(/현장 이름/).fill("QA 오류 검증 현장");
+    await page.getByLabel(/기록 제목/).fill("QA 입력 보존");
     const bytes=await sharp({create:{width:8,height:8,channels:3,background:"blue"}}).png().toBuffer();
     await page.getByLabel(/작업 사진/).setInputFiles({name:"fake.png",mimeType:"image/png",buffer:bytes});
     await page.getByRole("button",{name:"기록 저장",exact:true}).click();
     await expect(page.getByText(/기록을 저장하지 못했습니다/)).toBeVisible();
-    await expect(page.getByLabel(/작업 제목/)).toHaveValue("QA 입력 보존");
+    await expect(page.getByLabel(/기록 제목/)).toHaveValue("QA 입력 보존");
     await expect(page.getByAltText("선택한 작업 사진 미리보기")).toBeVisible();
     const record=await db.from("work_records").select("id").eq("id",id);
     const after=await db.from("work_records").select("id",{count:"exact",head:true});

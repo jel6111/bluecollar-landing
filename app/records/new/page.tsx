@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { connection } from "next/server";
 import RecordForm from "@/components/records/RecordForm";
 import { Card, CardContent } from "@/components/ui/card";
-export const metadata: Metadata = { title: "새 작업기록" };
+export const metadata: Metadata = { title: "사진 추가" };
 export default async function NewRecordPage() {
   await connection();
   const parts = new Intl.DateTimeFormat("en", {
@@ -17,9 +17,9 @@ export default async function NewRecordPage() {
   const date = `${part("year")}-${part("month")}-${part("day")}`;
   return (
     <>
-      <h1 className="text-3xl font-black">새 작업기록</h1>
+      <h1 className="text-3xl font-extrabold">사진 추가</h1>
       <p className="mt-3 text-slate-500">
-        가상의 현장과 작업 내용을 입력해주세요.
+        가상의 사진과 현장 이름을 넣고, 짧은 설명을 붙여주세요. 사진 없이 설명만 먼저 남겨도 됩니다.
       </p>
       <Card className="mt-8 max-w-2xl">
         <CardContent className="p-5 sm:p-8">
