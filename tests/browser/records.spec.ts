@@ -62,7 +62,8 @@ test("운영 외부 링크 없이 랜딩과 필수값 오류를 표시한다", a
     .evaluateAll((items) =>
       items.map((item) => (item as HTMLAnchorElement).href),
     );
-  expect(links.every((url) => url.startsWith("http://127.0.0.1:3106"))).toBe(
+  const expectedOrigin = new URL(page.url()).origin;
+  expect(links.every((url) => new URL(url).origin === expectedOrigin)).toBe(
     true,
   );
   await page.getByRole("link", { name: "사진 추가하기", exact: true }).click();

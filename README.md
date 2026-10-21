@@ -4,7 +4,7 @@
 
 ## 현재 상태
 
-2026-10-16 문서 갱신 기준, **전체 CRUD·사진 연동과 사진 중심 랜딩/기록 화면 보정**을 구현했습니다. 로컬 DB/Storage·브라우저 검증은 2026-10-14에 통과했고, 이번에는 Supabase 연결/데이터 작업을 제외하고 코드 검증과 GitHub 반영을 진행합니다. 클라우드 Supabase와 Vercel 배포는 아직 없습니다. 실제 블루칼라 서비스와 미션 5 배포는 변경하지 않았습니다.
+2026-10-21 기준, **전체 CRUD·사진 연동과 사진 중심 랜딩/기록 화면 보정**을 구현했습니다. 별도 무료 `practice` 조직의 새 과제 Supabase에 연결했으며 클라우드 DB/Storage 검사 7개와 로컬 최종 빌드 브라우저 검사 11개가 통과했습니다. 단위 검사 13개와 lint/build도 통과했습니다. 새 Vercel 프로젝트는 생성했으며 배포 인증과 공개 환경 검증이 남아 있습니다. 실제 블루칼라 서비스와 미션 5 배포는 변경하지 않았습니다.
 
 - [기능·테이블 명세](docs/mission6-plan.md)
 - [과제 자원 분리](docs/mission6-isolation.md)
@@ -78,30 +78,31 @@ Next.js 16.4 App Router, React 19, TypeScript, Tailwind CSS 4, shadcn/ui 스타�
 
 ## 로컬 실행
 
-Node.js 22 이상과 Docker Desktop Linux 엔진이 필요합니다. Supabase CLI는 2.120.0으로 고정합니다.
+Node.js 22 이상이 필요합니다. 선택 사항인 로컬 Supabase 개발에는 Docker Desktop Linux 엔진을 사용하며 CLI는 2.120.0으로 고정합니다.
 
 ```bash
 npm ci
-npm run db:start
-npm run db:migrate
+```
+
+`.env.example`을 참고해 Git 제외 `.env.local`에 등록된 **과제용 클라우드**의 서버 환경 변수와 `NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3106`을 설정합니다. 서버 키는 프로젝트 관리자만 안전하게 전달받아 사용하며 저장소에는 포함하지 않습니다. 과제 DB에는 SQL 2개가 이미 적용되어 있습니다.
+
+```bash
 npm run check:db
 npm run seed:demo
 npm run dev -- --hostname 127.0.0.1 --port 3106
 ```
 
 - 앱: `http://127.0.0.1:3106`
-- 새 과제 Supabase API: `http://127.0.0.1:56321`
-- Studio: `http://127.0.0.1:56323`
-- DB 포트: 56322, project_id: `bluecollar-mission6-demo`
-- 시작 도구는 새 로컬 키를 비추적 .env.local에 설정합니다. 다른 프로젝트 값이 있으면 덮어쓰지 않습니다.
+- 현재 DB/Storage는 등록된 새 과제 클라우드를 사용합니다.
 - seed는 개인정보 없는 가상 예시 2건을 준비합니다. 사진은 코드로 만든 가상 이미지이며 기존 기록을 덮어쓰지 않습니다.
 
 ```bash
 npm run cleanup:images
-npm run db:stop
 ```
 
-cleanup은 등록한 과제 DB의 정리 내역에서 UUID 경로를 검증하고 아직 연결된 파일은 지우지 않습니다. 중지는 미션 6 스택만 대상으로 하며 데이터 볼륨을 유지합니다.
+cleanup은 등록한 과제 DB의 정리 내역에서 UUID 경로를 검증하고 아직 연결된 파일은 지우지 않습니다.
+
+Docker 로컬 개발 도구도 보관합니다. 클라우드 환경 파일을 별도로 안전하게 보관한 후 `npm run db:start` → `npm run db:migrate`로 새 로컬 등록/키를 준비할 수 있습니다. 다른 URL이 있는 환경 파일은 도구가 덮어쓰지 않습니다. 로컬 API/DB/Studio는 56321/56322/56323이며 Vercel에는 로컬 모드를 배포할 수 없습니다. 원래 클라우드로 돌아갈 때는 환경 파일과 등록 정보를 함께 복원하고 `check:db`로 확인합니다.
 
 ## 환경 변수
 
@@ -137,6 +138,6 @@ npm run test:e2e
 - 미션 6 공개 Vercel URL: **미발급**
 
 
-GitHub `feature/mission6-crud-20261014` 브랜치에 관리하며 자동 Git 배포는 차단합니다. 로컬 Supabase는 클라우드 무료 프로젝트 한도를 소비하지 않습니다. 사용자가 무료 한도를 모두 사용 중이라고 설명했으므로 별도 클라우드 확보 방법을 결정한 후 새 Vercel에 연결해야 합니다.
+GitHub `feature/mission6-crud-20261014` 브랜치에 관리하며 자동 Git 배포는 차단합니다. 새 무료 `practice` 조직의 과제 Supabase를 별도 Vercel `bluecollar-mission6-demo`에 연결합니다.
 
 미션 6 공개 배포 URL은 아직 없습니다. 기존 미션 5 URL을 미션 6 제출 링크로 사용하지 않습니다. 실제 서비스 DB 재사용·미션 5 배포 변경·main 병합은 진행하지 않습니다.

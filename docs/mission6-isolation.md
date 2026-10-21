@@ -10,9 +10,9 @@
 | 브랜치 | `feature/mission6-crud-20261014` | 미션 5 head `1e403c7`에서 생성 |
 | 체크아웃 | `work/bluecollar-mission6` | 새 클론, 비추적 파일 복사 없음 |
 | 로컬 포트 | `3106` | 3묶음 최종 빌드 앱·브라우저 검증 |
-| Supabase | 새 로컬 `bluecollar-mission6-demo` | Docker 스택 생성·테이블 적용. 클라우드는 아직 없음 |
-| Storage | 새 로컬 프로젝트의 `work-record-images` | 비공개 버킷·가상 사진 1장·테스트 정리 검증 |
-| Vercel | 새 `bluecollar-mission6-demo` | 아직 생성하지 않음 |
+| Supabase | `practice · FREE` / `bluecollar-mission6-demo` | 2026-10-21 새 클라우드 생성·연결. 로컬 전용 스택도 별도 보관 |
+| Storage | 새 클라우드 프로젝트의 `work-record-images` | 비공개·3 MiB·JPEG/PNG/WebP, 가상 사진만 저장 |
+| Vercel | 새 `bluecollar-mission6-demo` | 2026-10-21 생성·브라우저 확인. 환경 변수/배포 미실행 |
 | 분석·문의·메시징 | 연결 없음 | 운영 계정 사용 금지 |
 
 ## 보호할 기존 대상
@@ -37,12 +37,12 @@
 
 | 항목 | 값 |
 |---|---|
-| Supabase 계정/조직 | 로컬 Docker는 계정 없이 실행. 클라우드 미정 |
-| Supabase 이름 | 로컬 생성: `bluecollar-mission6-demo`. 같은 이름의 새 클라우드 예정 |
-| Supabase project ref | 클라우드 미발급. 로컬 project_id는 `bluecollar-mission6-demo` |
-| Vercel 계정/팀 | 미정 |
-| Vercel 이름 | 예정: `bluecollar-mission6-demo` |
-| Vercel project ID | 미발급 |
+| Supabase 계정/조직 | `practice`, FREE, 조직 ID `dewpytfcifrdkkcnzotg` |
+| Supabase 이름 | `bluecollar-mission6-demo`, NANO, Singapore |
+| Supabase project ref | `uikvezrkmwplbslayene` |
+| Vercel 계정/팀 | jireh project (jel6111), Hobby, account ID `team_RgDqKSqNkiDjzIrLB6qUwEOJ` |
+| Vercel 이름 | `bluecollar-mission6-demo` |
+| Vercel project ID | `prj_EmOPQD4WC4louamoefDBSXxhNqiL` |
 | 미션 6 URL | 미발급 |
 | 확인 날짜·근거 | 2026-10-14: 새 로컬 API/DB/Studio 포트 56321/56322/56323, 테이블 SQL 적용·브라우저 테스트 |
 
@@ -82,3 +82,11 @@
 ## 2026-10-16 현재 작업 범위
 
 운영 프로젝트 공유/일시정지/유료 전환 논의는 보류했다. 사용자는 Supabase를 제외한 문서 정리·코드 검증·미션 6 브랜치 커밋/푸시를 요청했다. 등록 정보·환경 변수·DB/Storage·Vercel·자동 배포 차단은 변경하지 않는다. 제공된 제품 자료는 화면/용어 참고로만 사용했다.
+
+## 2026-10-21 새 자원 준비
+
+사용자가 새 무료 practice 조직에 과제 Supabase를 만들고 나머지 연결·배포를 진행하도록 요청했다. 조직 ID dewpytfcifrdkkcnzotg, 화면 요금제 FREE를 확인했다. 사용자가 비밀번호 입력과 생성 제출을 직접 완료했다. 새 이름과 ref `uikvezrkmwplbslayene`, Healthy 상태를 화면에서 확인한 뒤 등록했다. Data API 활성/새 테이블 자동 노출 해제/자동 RLS 활성으로 생성했다.
+
+새 프로젝트 SQL Editor에서 저장소의 마이그레이션 2개를 실행하고 성공을 확인했다. 서버 연결 검사 통과, 가상 예시 2건·가상 사진 1장 준비, 실제 클라우드 DB/Storage 검사 7개 통과. 기존 로컬 환경은 Git 제외 백업에 보관하고 `.env.local`을 새 과제 URL/서버 키로 전환했다. 키 값은 문서와 Git에 기록하지 않는다.
+
+새 Vercel 프로젝트를 연결 도구로 생성하고 브라우저의 jireh project Hobby / bluecollar-mission6-demo 화면에서 생성 결과를 확인했다. 로컬 .vercel/project.json은 새 ID만 기록하며 Git 제외다. Git 연결·환경 변수·배포는 아직 없다. CLI 인증은 준비되지 않았으며 연결 도구의 명시적 team 조회는 권한 부족으로 거절됐다. 이 권한을 우회하지 않고 브라우저에서 새 프로젝트만 확인했다. 후속 작업은 허용된 브라우저 로그인 또는 명시적 CLI 인증으로 진행한다.
