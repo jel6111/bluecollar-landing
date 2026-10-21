@@ -27,3 +27,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+- 2026-10-21 새 과제 Supabase 연결과 별도 Vercel 공개 배포/브라우저 11개 검증 완료. 공개 URL은 https://bluecollar-mission6-demo.vercel.app/ 이며 함수 지역 sin1이다. 이후에도 미션 6 전용 ID와 ref를 확인하고 수동 배포하며 기존 서비스/미션 5/main은 보호한다.

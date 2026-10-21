@@ -12,7 +12,7 @@
 | 로컬 포트 | `3106` | 3묶음 최종 빌드 앱·브라우저 검증 |
 | Supabase | `practice · FREE` / `bluecollar-mission6-demo` | 2026-10-21 새 클라우드 생성·연결. 로컬 전용 스택도 별도 보관 |
 | Storage | 새 클라우드 프로젝트의 `work-record-images` | 비공개·3 MiB·JPEG/PNG/WebP, 가상 사진만 저장 |
-| Vercel | 새 `bluecollar-mission6-demo` | 2026-10-21 생성·브라우저 확인. 환경 변수/배포 미실행 |
+| Vercel | 새 `bluecollar-mission6-demo` | 2026-10-21 Production 환경 변수·공개 배포·브라우저 11개 검사 완료 |
 | 분석·문의·메시징 | 연결 없음 | 운영 계정 사용 금지 |
 
 ## 보호할 기존 대상
@@ -43,7 +43,7 @@
 | Vercel 계정/팀 | jireh project (jel6111), Hobby, account ID `team_RgDqKSqNkiDjzIrLB6qUwEOJ` |
 | Vercel 이름 | `bluecollar-mission6-demo` |
 | Vercel project ID | `prj_EmOPQD4WC4louamoefDBSXxhNqiL` |
-| 미션 6 URL | 미발급 |
+| 미션 6 URL | `https://bluecollar-mission6-demo.vercel.app/` |
 | 확인 날짜·근거 | 2026-10-14: 새 로컬 API/DB/Studio 포트 56321/56322/56323, 테이블 SQL 적용·브라우저 테스트 |
 
 ## 자동 배포 차단
@@ -89,4 +89,8 @@
 
 새 프로젝트 SQL Editor에서 저장소의 마이그레이션 2개를 실행하고 성공을 확인했다. 서버 연결 검사 통과, 가상 예시 2건·가상 사진 1장 준비, 실제 클라우드 DB/Storage 검사 7개 통과. 기존 로컬 환경은 Git 제외 백업에 보관하고 `.env.local`을 새 과제 URL/서버 키로 전환했다. 키 값은 문서와 Git에 기록하지 않는다.
 
-새 Vercel 프로젝트를 연결 도구로 생성하고 브라우저의 jireh project Hobby / bluecollar-mission6-demo 화면에서 생성 결과를 확인했다. 로컬 .vercel/project.json은 새 ID만 기록하며 Git 제외다. Git 연결·환경 변수·배포는 아직 없다. CLI 인증은 준비되지 않았으며 연결 도구의 명시적 team 조회는 권한 부족으로 거절됐다. 이 권한을 우회하지 않고 브라우저에서 새 프로젝트만 확인했다. 후속 작업은 허용된 브라우저 로그인 또는 명시적 CLI 인증으로 진행한다.
+새 Vercel 프로젝트를 연결 도구로 생성하고 브라우저의 jireh project Hobby / bluecollar-mission6-demo 화면에서 확인했다. 연결 도구의 team 권한 부족 뒤 사용자가 CLI의 정상 로그인 승인을 직접 완료했다. CLI whoami와 project inspect에서 위 계정/팀/ID를 대조한 뒤 새 프로젝트에만 Production 환경 변수 3개를 추가했다. 서버 키는 Secret, URL은 Config다. 로컬 .vercel/project.json은 새 ID만 기록하며 Git 제외다.
+
+수동 Production 배포를 --skip-domain으로 준비하고 서버의 과제 DB 조회를 확인한 뒤 과제 공개 주소로 승격했다. 첫 배포의 사진 교체 검사는 저장 중 5초 대기 제한을 초과했다. 앱 서버를 DB와 같은 sin1으로 지정하고 배포 검사 대기/저장 완료 이동 확인을 보정했다. 실행 코드 5631e67의 배포 dpl_75mNiLp35HnQ69JDdXbG5q7yQVBw에서 공개 브라우저 11개가 통과했다. Git 연결과 기존 프로젝트 설정은 변경하지 않았고 자동 배포 차단을 유지한다.
+
+업로드 전 파일 목록을 검사해 로컬 환경 백업이 포함되는 것을 발견하고 .vercelignore로 차단했다. 실제 업로드 목록 93개에는 비밀값/로컬 설정이 없다. main/미션 5 원격 head도 기존 값 그대로 확인했다.

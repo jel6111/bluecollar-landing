@@ -4,7 +4,7 @@
 
 ## 현재 상태
 
-2026-10-21 기준, **전체 CRUD·사진 연동과 사진 중심 랜딩/기록 화면 보정**을 구현했습니다. 별도 무료 `practice` 조직의 새 과제 Supabase에 연결했으며 클라우드 DB/Storage 검사 7개와 로컬 최종 빌드 브라우저 검사 11개가 통과했습니다. 단위 검사 13개와 lint/build도 통과했습니다. 새 Vercel 프로젝트는 생성했으며 배포 인증과 공개 환경 검증이 남아 있습니다. 실제 블루칼라 서비스와 미션 5 배포는 변경하지 않았습니다.
+2026-10-21 기준, **전체 CRUD·사진 연동과 사진 중심 랜딩/기록 화면 보정**을 구현하고 과제 전용 Vercel에 배포했습니다. 별도 무료 `practice` 조직의 새 Supabase를 사용합니다. 단위 검사 13개, 실제 클라우드 DB/Storage 검사 7개, 로그인 없는 공개 배포의 브라우저 검사 11개와 lint/build가 통과했습니다. 실제 블루칼라 서비스와 미션 5 배포는 변경하지 않았습니다.
 
 - [기능·테이블 명세](docs/mission6-plan.md)
 - [과제 자원 분리](docs/mission6-isolation.md)
@@ -126,6 +126,8 @@ npm run test:db
 npm run test:e2e
 ```
 
+공개 배포 검사는 PowerShell에서 `$env:MISSION6_E2E_BASE_URL='https://bluecollar-mission6-demo.vercel.app'; npm run test:e2e`로 실행합니다. DB 확인/정리를 위한 비추적 과제 환경 파일이 필요합니다. 허용된 과제 주소만 검사하며 생성한 테스트 UUID/파일만 정리합니다.
+
 사진 중심 화면 보정 후 단위 검사 13개, 실제 DB/Storage 검사 7개, 최종 빌드 앱의 브라우저 검사 11개가 통과했습니다. DB 검사에서는 업로드/등록/수정/파일 정리 실패와 저장 응답 유실을 선택적으로 주입해 보상 동작을 확인했습니다. 핵심 정상 데이터는 실제 Supabase에 저장하며 테스트가 만든 UUID/파일만 정리합니다.
 
 `npm run test:states -- empty`는 기본 가상 예시 두 건만 있을 때 임시 분리 후 복원해 빈 화면을 확인합니다. 사용자 기록이 있으면 실행을 거절합니다. 연결 실패 UI는 환경 파일을 바꾸지 않은 테스트용 앱 프로세스로 확인했습니다. 상세 결과·재현 조건은 QA 문서에 있습니다.
@@ -135,9 +137,11 @@ npm run test:e2e
 - [공개 GitHub 저장소](https://github.com/jel6111/bluecollar-landing)
 - [미션 6 최신 작업 브랜치](https://github.com/jel6111/bluecollar-landing/tree/feature/mission6-crud-20261014)
 - 로컬 주소: `http://127.0.0.1:3106` (공개 제출 URL이 아님)
-- 미션 6 공개 Vercel URL: **미발급**
+- [미션 6 공개 Vercel URL](https://bluecollar-mission6-demo.vercel.app/)
 
 
 GitHub `feature/mission6-crud-20261014` 브랜치에 관리하며 자동 Git 배포는 차단합니다. 새 무료 `practice` 조직의 과제 Supabase를 별도 Vercel `bluecollar-mission6-demo`에 연결합니다.
 
-미션 6 공개 배포 URL은 아직 없습니다. 기존 미션 5 URL을 미션 6 제출 링크로 사용하지 않습니다. 실제 서비스 DB 재사용·미션 5 배포 변경·main 병합은 진행하지 않습니다.
+배포 환경 변수는 Production 범위에 설정합니다. `SUPABASE_SECRET_KEY`는 Vercel의 Secret, URL 2개는 Config이며 비밀값을 코드나 업로드 파일에 넣지 않습니다. `.vercelignore`로 로컬 환경 백업·테스트 결과·임시 Supabase 파일도 제외합니다. 함수는 DB와 같은 싱가포르 `sin1`에서 실행합니다.
+
+제출 시 위 미션 6 브랜치와 공개 배포 URL을 함께 안내합니다. main 병합 없이 별도 과제 프로젝트로 배포했으며, 기존 서비스와 미션 5 설정은 유지합니다. 실제 10분 경과 사진 URL 만료 확인과 개발 도구 의존성 감사 항목은 QA 문서에 남겨 두었습니다.
