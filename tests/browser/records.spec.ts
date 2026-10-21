@@ -256,6 +256,7 @@ test("사진 등록·유지·교체·제거·추가와 수정·삭제가 브라�
     .getByLabel(/작업 사진/)
     .setInputFiles(await photoFile("webp", "#dc2626"));
   await page.getByRole("button", { name: "수정 내용 저장" }).click();
+  await expect(page).toHaveURL(new RegExp(`/records/${id}\\?page=1$`));
   await expect(
     page.getByRole("link", { name: "고치기", exact: true }),
   ).toBeVisible();
