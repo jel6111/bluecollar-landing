@@ -2,11 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "bluecollar-landing",
+      "name": "bluecollar-mission6-demo",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "cwd": "C:\\Users\\user\\Desktop\\mission\\bluecollar-landing",
-      "port": 3000
+      "runtimeArgs": ["run", "dev", "--", "--hostname", "127.0.0.1", "--port", "3106"],
+      "cwd": "C:\\Users\\user\\Documents\\Codex\\2026-09-28\\5-https-github-com-jel6111-bluecollar\\work\\bluecollar-mission6",
+      "port": 3106
     }
   ]
 }

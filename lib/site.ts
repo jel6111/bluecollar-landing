@@ -1,23 +1,20 @@
-/**
- * 사이트 전역 설정.
- * 값은 전부 환경변수에서 읽는다 — .env.example 참고.
- */
-export const SITE = {
-  name: "블루칼라 Blue Collar",
-  title: "블루칼라 | 작업 사진이 기록과 포트폴리오가 됩니다",
-  description:
-    "카톡·문자로 작업 사진을 전송하는 기공들을 위한 간편 솔루션",
-  /** Vercel 배포 URL (OG 메타데이터 절대경로 기준) */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  /** 설문(구글폼) URL — 미설정 시 CTA가 방어 동작한다 */
-  formUrl: process.env.NEXT_PUBLIC_GOOGLE_FORM_URL,
-  /** Google Analytics 측정 ID (G-XXXXXXXXXX) — 미설정 시 GA 스크립트를 넣지 않는다 */
-  gaId: process.env.NEXT_PUBLIC_GA_ID,
-  /** 푸터 문의 이메일 (선택) */
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-} as const;
-
-/** 구글폼 URL이 실제로 사용 가능한 상태인지 (placeholder 방어) */
-export function isFormUrlReady(url: string | undefined): url is string {
-  return Boolean(url && !url.includes("REPLACE_ME"));
+/** 과제 데모 내부 경로만 제공한다. 운영 서비스·메시징·분석 주소는 없다. */
+const localUrl = "http://127.0.0.1:3106";
+const requestedUrl = process.env.NEXT_PUBLIC_SITE_URL;
+const siteUrl = requestedUrl ? new URL(requestedUrl) : new URL(localUrl);
+if (
+  !["http:", "https:"].includes(siteUrl.protocol) ||
+  siteUrl.hostname === "parancollar.com" ||
+  siteUrl.hostname.endsWith(".parancollar.com") ||
+  siteUrl.hostname === "bluecollar-landing.vercel.app"
+) {
+  throw new Error("미션 6 전용 사이트 주소를 설정해주세요.");
 }
+export const SITE = {
+  name: "블루칼라 미션 6 데모",
+  title: "블루칼라 미션 6 | 현장 사진 기록 체험",
+  description:
+    "블루칼라의 사진 기록 흐름을 소개하고, 가상의 현장 사진과 설명을 저장·조회·수정·삭제하는 과제 제출용 데모입니다.",
+  url: siteUrl.origin,
+  recordsPath: "/records",
+} as const;

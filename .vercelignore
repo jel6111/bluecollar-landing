@@ -1,0 +1,14 @@
+.git
+.vercel
+.next
+node_modules
+.env*
+!.env.example
+test-results
+playwright-report
+coverage
+*.tsbuildinfo
+playwright.config.t
+supabase/.temp
+supabase/.branches
+supabase/snippets

@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
-import Analytics from "@/components/Analytics";
 import { SITE } from "@/lib/site";
 
-const notoSansKr = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  variable: "--font-noto-sans-kr",
+const pretendard = localFont({
+  src: "../public/fonts/PretendardVariable.woff2",
+  weight: "100 900",
+  variable: "--font-pretendard",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: SITE.title,
+  title: { default: SITE.title, template: "%s | 블루칼라 과제 데모" },
   description: SITE.description,
+  robots: { index: false, follow: false },
   openGraph: {
     title: SITE.title,
     description: SITE.description,
@@ -22,31 +22,19 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     locale: "ko_KR",
     type: "website",
-    images: [
-      {
-        url: "/og-v2.jpg",
-        width: 1200,
-        height: 630,
-        alt: "블루칼라 Blue Collar — 작업 사진이 기록과 포트폴리오가 되는 플랫폼",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Analytics />
-      </body>
+    <html
+      lang="ko"
+      data-scroll-behavior="smooth"
+      className={`${pretendard.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

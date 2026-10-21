@@ -1,19 +1,24 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @theme {
+  --color-blue-50: #eff6ff;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
   /* 브랜드 컬러 — 딥 네이비 / 코발트 블루 / 콘크리트 그레이 */
   --color-navy-950: #060f1e;
   --color-navy-900: #0a1a33;
   --color-navy-800: #10264a;
-  --color-cobalt-400: #4d8dff;
-  --color-cobalt-500: #2d7dff;
-  --color-cobalt-600: #1d5fd6;
+  --color-cobalt-400: #60a5fa;
+  --color-cobalt-500: #2563eb;
+  --color-cobalt-600: #1d4ed8;
   --color-concrete-100: #f2f4f7;
   --color-concrete-200: #e4e8ee;
   --color-concrete-300: #c9d2de;
   --color-concrete-500: #5f6b7d;
 
-  --font-sans: var(--font-noto-sans-kr), "Apple SD Gothic Neo", "Malgun Gothic",
+  --font-sans: var(--font-pretendard), "Apple SD Gothic Neo", "Malgun Gothic",
     sans-serif;
 }
 
@@ -23,13 +28,23 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
 body {
   background: #ffffff;
-  color: var(--color-navy-950);
+  color: #0f172a;
   font-family: var(--font-sans);
   word-break: keep-all;
   overflow-wrap: break-word;
+  letter-spacing: -0.015em;
+  overscroll-behavior-y: contain;
 }
+
+button { word-break: keep-all; overflow-wrap: anywhere; }
+input:not([type="checkbox"]):not([type="radio"]), textarea, select { font-size: max(1rem, 16px); }
+section[id] { scroll-margin-top: 2rem; }
 
 /* 블루프린트 그리드 배경 (네이비 섹션용) */
 .blueprint-grid {

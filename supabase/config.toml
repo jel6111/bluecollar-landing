@@ -1,0 +1,65 @@
+# 이 설정은 미션 6 과제용 로컬 스택만 제어한다.
+project_id = "bluecollar-mission6-demo"
+
+[api]
+enabled = true
+port = 56321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 100
+auto_expose_new_tables = false
+
+[db]
+port = 56322
+shadow_port = 56320
+major_version = 17
+
+[db.pooler]
+enabled = false
+port = 56329
+
+[db.migrations]
+enabled = true
+schema_paths = []
+
+[db.seed]
+enabled = false
+sql_paths = []
+
+[realtime]
+enabled = false
+
+[studio]
+enabled = true
+port = 56323
+api_url = "http://127.0.0.1"
+openai_api_key = ""
+
+[local_smtp]
+enabled = false
+port = 56324
+
+[storage]
+enabled = true
+file_size_limit = "3MiB"
+
+[storage.s3_protocol]
+enabled = false
+
+[storage.analytics]
+enabled = false
+
+[storage.vector]
+enabled = false
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3106"
+additional_redirect_urls = []
+enable_signup = false
+
+[edge_runtime]
+enabled = false
+
+[analytics]
+enabled = false
