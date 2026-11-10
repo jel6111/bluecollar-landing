@@ -1,5 +1,5 @@
 {
-  "name": "bluecollar-mission6-demo",
+  "name": "bluecollar-mission7-demo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,7 +17,21 @@
     "db:migrate": "node scripts/local-supabase.mjs migrate",
     "cleanup:images": "tsx --conditions=react-server scripts/cleanup-images.mjs",
     "test:db": "tsx --conditions=react-server --test tests/db/*.test.mjs",
-    "test:states": "tsx scripts/verify-local-states.mjs"
+    "test:states": "tsx scripts/verify-local-states.mjs",
+    "check:plan": "node scripts/check-mission7-plan.mjs",
+    "predev": "node scripts/mission7-phase-guard.mjs dev",
+    "prestart": "node scripts/mission7-phase-guard.mjs start",
+    "prebuild": "node scripts/mission7-phase-guard.mjs build",
+    "presetup:demo": "node scripts/mission7-phase-guard.mjs setup:demo",
+    "precheck:db": "node scripts/mission7-phase-guard.mjs check:db",
+    "predb:start": "node scripts/mission7-phase-guard.mjs db:start",
+    "predb:stop": "node scripts/mission7-phase-guard.mjs db:stop",
+    "preseed:demo": "node scripts/mission7-phase-guard.mjs seed:demo",
+    "predb:migrate": "node scripts/mission7-phase-guard.mjs db:migrate",
+    "precleanup:images": "node scripts/mission7-phase-guard.mjs cleanup:images",
+    "pretest:db": "node scripts/mission7-phase-guard.mjs test:db",
+    "pretest:e2e": "node scripts/mission7-phase-guard.mjs test:e2e",
+    "pretest:states": "node scripts/mission7-phase-guard.mjs test:states"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.2.1",

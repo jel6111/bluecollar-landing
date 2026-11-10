@@ -1,22 +1,22 @@
-# 이 설정은 미션 6 과제용 로컬 스택만 제어한다.
-project_id = "bluecollar-mission6-demo"
+# 이 설정은 미션 7 과제용 로컬 스택의 미실행 설계안이다.
+project_id = "bluecollar-mission7-demo"
 
 [api]
 enabled = true
-port = 56321
+port = 57321
 schemas = ["public"]
 extra_search_path = ["public", "extensions"]
 max_rows = 100
 auto_expose_new_tables = false
 
 [db]
-port = 56322
-shadow_port = 56320
+port = 57322
+shadow_port = 57320
 major_version = 17
 
 [db.pooler]
 enabled = false
-port = 56329
+port = 57329
 
 [db.migrations]
 enabled = true
@@ -31,13 +31,13 @@ enabled = false
 
 [studio]
 enabled = true
-port = 56323
+port = 57323
 api_url = "http://127.0.0.1"
 openai_api_key = ""
 
 [local_smtp]
 enabled = false
-port = 56324
+port = 57324
 
 [storage]
 enabled = true
@@ -54,7 +54,7 @@ enabled = false
 
 [auth]
 enabled = true
-site_url = "http://127.0.0.1:3106"
+site_url = "http://127.0.0.1:3107"
 additional_redirect_urls = []
 enable_signup = false
 
