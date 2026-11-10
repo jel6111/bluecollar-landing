@@ -3,6 +3,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateAuthConfiguration } from "../lib/auth/config.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const baseline = "84a7dd703af67bba5d746b9c09caef5d7a0fd9ac";
@@ -13,11 +14,28 @@ assert.equal(git("branch", "--show-current"), "feature/mission7-user-20261110");
 assert.equal(git("remote", "get-url", "origin"), "https://github.com/jel6111/bluecollar-landing.git");
 execFileSync("git", ["merge-base", "--is-ancestor", baseline, "HEAD"], { cwd: root, windowsHide: true });
 const registration = json("lib/supabase/demo-project.json");
-assert.deepEqual(registration, {
-  projectName: "bluecollar-mission7-demo", mode: "unconfigured",
-  supabaseProjectRef: null, confirmedNewDemoProject: false,
-});
-assert.equal(readdirSync(root).filter((p) => p.startsWith(".env") && p !== ".env.example").length, 0);
+const environmentFiles = readdirSync(root).filter((p) => p.startsWith(".env") && p !== ".env.example");
+for (const path of environmentFiles) {
+  assert.ok([".env.local", ".env.auth-test.local"].includes(path));
+  assert.equal(git("check-ignore", path), path);
+}
+if (registration.confirmedNewDemoProject) {
+  assert.equal(registration.mode, "cloud");
+  assert.ok(environmentFiles.includes(".env.local"));
+  process.loadEnvFile(resolve(root, ".env.local"));
+  validateAuthConfiguration(registration, {
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    key: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+  });
+  assert.ok(read("docs/mission7-isolation.md").includes(registration.supabaseProjectRef));
+} else {
+  assert.deepEqual(registration, {
+    projectName: "bluecollar-mission7-demo", mode: "unconfigured",
+    supabaseProjectRef: null, confirmedNewDemoProject: false,
+  });
+  assert.equal(environmentFiles.length, 0);
+}
 assert.equal(existsSync(resolve(root, ".vercel")), false);
 for (const line of read(".env.example").split(/\r?\n/)) {
   if (!line || line.startsWith("#")) continue;
@@ -39,12 +57,13 @@ const lock = json("package-lock.json");
 assert.equal(pkg.name, "bluecollar-mission7-demo");
 assert.equal(lock.name, pkg.name);
 assert.equal(lock.packages[""].name, pkg.name);
-const protectedCommands = ["dev", "start", "build", "setup:demo", "check:db", "db:start", "db:stop", "seed:demo", "db:migrate", "cleanup:images", "test:db", "test:e2e", "test:states"];
-for (const command of protectedCommands) {
+const allowedCommands = ["dev", "start", "build"];
+const protectedCommands = ["setup:demo", "check:db", "db:start", "db:stop", "seed:demo", "db:migrate", "cleanup:images", "test:db", "test:e2e", "test:states"];
+for (const command of [...allowedCommands, ...protectedCommands]) {
   assert.equal(pkg.scripts[`pre${command}`], `node scripts/mission7-phase-guard.mjs ${command}`);
   const result = spawnSync(process.execPath, [resolve(root, "scripts/mission7-phase-guard.mjs"), command], { cwd: root, encoding: "utf8", windowsHide: true });
-  assert.equal(result.status, 42);
-  assert.ok(result.stderr.includes("MISSION7_DESIGN_ONLY"));
+  assert.equal(result.status, allowedCommands.includes(command) ? 0 : 42);
+  if (protectedCommands.includes(command)) assert.ok(result.stderr.includes("MISSION7_RECORDS_BLOCKED"));
 }
 const preserved = git("ls-tree", "-r", "--name-only", baseline).split(/\r?\n/).filter((p) => /^docs\/mission[56]-/.test(p) || p.startsWith("supabase/migrations/"));
 for (const path of preserved) {
@@ -65,4 +84,4 @@ for (const path of documents) {
     links++;
   }
 }
-console.log(JSON.stringify({ phase: "mission7-group1-design", documents: documents.length, localLinks: links, guardedCommands: protectedCommands.length, preservedFiles: preserved.length, environmentFiles: 0, connectedCloudProjects: 0, passed: true }));
+console.log(JSON.stringify({ phase: "mission7-group2-auth", documents: documents.length, localLinks: links, allowedAppCommands: allowedCommands.length, guardedDataCommands: protectedCommands.length, preservedFiles: preserved.length, environmentFiles: environmentFiles.length, connectedCloudProjects: registration.confirmedNewDemoProject ? 1 : 0, passed: true }));

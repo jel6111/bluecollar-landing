@@ -1,23 +1,9 @@
 import "server-only";
-import { createClient } from "@supabase/supabase-js";
-import registration from "./demo-project.json";
-import { validateDemoConnection } from "./config";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { DemoConfigurationError } from "./config";
 import type { Database } from "./database.types";
 
-export function createDemoClient() {
-  const { url, secret } = validateDemoConnection(registration, {
-    url: process.env.SUPABASE_URL,
-    secret: process.env.SUPABASE_SECRET_KEY,
-    deployed: Boolean(process.env.VERCEL),
-  });
-  return createClient<Database>(url, secret, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
-    },
-    global: {
-      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
-    },
-  });
+export function createDemoClient(): SupabaseClient<Database> {
+  // Inherited record Actions cannot reach any DB while ownership is unfinished.
+  throw new DemoConfigurationError("기록 관리는 사용자별 권한을 연결하는 3묶음에서 준비합니다.");
 }

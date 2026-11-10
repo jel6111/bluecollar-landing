@@ -17,12 +17,12 @@ export function LandingHero() {
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-slate-600">
             카톡으로 보낸 사진에 짧은 설명을 붙여<br className="hidden sm:block" />현장별로 찾고, 소장님·반장님께 전달하세요.
           </p>
-          <p className="mt-3 text-sm leading-relaxed text-slate-600">블루칼라의 서비스 흐름을 소개하고, 아래 과제용 웹 화면에서 사진 기록을 직접 체험합니다.</p>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">블루칼라의 서비스 흐름을 소개하고, 별도 과제용 계정으로 회원 기능을 직접 체험합니다.</p>
           <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-            <Button asChild size="lg"><Link href="/records">사진 기록 체험하기 <ArrowRight size={19} aria-hidden /></Link></Button>
+            <Button asChild size="lg"><Link href="/records">내 기록 시작하기 <ArrowRight size={19} aria-hidden /></Link></Button>
             <Link href="#service-flow" className="inline-flex min-h-12 items-center justify-center rounded-xl px-4 font-bold text-slate-700 underline underline-offset-4">사용 흐름 보기</Link>
           </div>
-          <p className="mt-4 text-sm text-slate-500">미션 6 과제 데모 · 가상 자료로 체험</p>
+          <p className="mt-4 text-sm text-slate-500">미션 7 과제 데모 · 별도 계정으로 체험</p>
         </div>
         <figure className="mx-auto w-full max-w-md">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/40 sm:p-6">
@@ -84,16 +84,16 @@ export function ProductFlow() {
             <li key={title} className="rounded-xl border border-slate-200 p-5"><div className="flex items-center justify-between"><Icon size={26} className="text-blue-600" aria-hidden /><span className="text-sm font-bold text-slate-500">0{index + 1}</span></div><h3 className="mt-5 font-bold">{title}</h3><p className="mt-3 text-sm leading-relaxed text-slate-600">{text}</p></li>
           ))}
         </ol>
-        <p className="mt-5 text-sm leading-relaxed text-slate-600">위 흐름은 제공된 제품 자료를 기준으로 소개합니다. 이 과제에서 직접 체험하는 기능은 웹 사진 기록의 등록·조회·수정·삭제입니다.</p>
+        <p className="mt-5 text-sm leading-relaxed text-slate-600">위 흐름은 제공된 제품 자료를 기준으로 소개합니다. 현재 과제에서는 가입·로그인·로그아웃을 체험하고, 기록 CRUD는 사용자별 권한 연결 후 제공합니다.</p>
       </div>
     </section>
   );
 }
 const demoTasks = [
-  { icon: Images, text: "사진 한 장과 설명 저장하기" },
-  { icon: FolderOpen, text: "목록에서 기록 열고 다시 확인하기" },
-  { icon: PencilLine, text: "설명 고치고 사진 교체하기" },
-  { icon: Trash2, text: "확인 후 필요 없는 기록 삭제하기" },
+  { icon: Images, text: "이메일로 가입하고 확인하기" },
+  { icon: FolderOpen, text: "로그인 후 보호된 화면 열기" },
+  { icon: PencilLine, text: "새로고침 후 로그인 상태 확인하기" },
+  { icon: Trash2, text: "로그아웃하고 접근 제한 확인하기" },
 ];
 export function DemoInvitation() {
   return (
@@ -101,10 +101,10 @@ export function DemoInvitation() {
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="text-sm font-bold text-blue-700">미션 6 · 사진 기록 체험</p>
-            <h2 id="demo-title" className="mt-3 text-2xl font-extrabold sm:text-3xl">가상의 현장으로<br />첫 기록을 남겨보세요.</h2>
-            <p className="mt-5 leading-relaxed text-slate-700">사진을 추가하고, 현장 이름과 짧은 설명을 적어보세요. 저장한 기록은 새로고침 후에도 다시 열어 고치거나 삭제할 수 있습니다.</p>
-            <Button asChild size="lg" className="mt-7"><Link href="/records/new">사진 추가하기 <ArrowRight size={19} aria-hidden /></Link></Button>
+            <p className="text-sm font-bold text-blue-700">미션 7 · 회원 기능 체험</p>
+            <h2 id="demo-title" className="mt-3 text-2xl font-extrabold sm:text-3xl">과제용 계정으로<br />시작해보세요.</h2>
+            <p className="mt-5 leading-relaxed text-slate-700">이메일로 가입하고 확인을 마친 뒤 로그인해보세요. 내 기록 관리는 사용자별 데이터 권한을 연결하는 다음 묶음에서 준비합니다.</p>
+            <Button asChild size="lg" className="mt-7"><Link href="/signup">회원가입하기 <ArrowRight size={19} aria-hidden /></Link></Button>
           </div>
           <div className="rounded-2xl border border-blue-200 bg-white p-5 sm:p-7">
             <h3 className="font-bold">이 데모에서 해볼 수 있는 일</h3>

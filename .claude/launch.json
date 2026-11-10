@@ -4,7 +4,10 @@
     {
       "name": "bluecollar-mission7-demo",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--hostname", "127.0.0.1", "--port", "3107"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "cwd": "C:\\Users\\user\\Documents\\Codex\\2026-11-10\\bluecollar-mission7",
       "port": 3107
     }

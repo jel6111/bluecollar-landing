@@ -1,6 +1,6 @@
 # 미션 7 기능 범위와 구현 계획
 
-작성일 2026-11-10. 사용자 승인 범위는 유저 기능 선택과 1묶음 설계/분리다. 아래는 구현 예정 명세이며 현재 회원 기능이 완성됐다는 의미가 아니다.
+작성일 2026-11-10. 사용자 승인 범위는 2묶음 가입·이메일 확인·로그인·로그아웃·세션과 새 과제 Supabase 연결까지다. 인증 코드와 화면은 구현했으며 새 프로젝트 nlvjybohqqkmduqcgzvj를 연결했다. 실제 가입·메일 확인·로그인은 확인했고 새로고침 유지·로그아웃 후 접근 제한도 사용자가 수동 확인했다. 자동 계정 검사는 건너뛰었다. 3묶음 CRUD/RLS와 4묶음 배포는 아직 진행하지 않는다.
 
 ## 선택 이유와 완료 목표
 
@@ -26,7 +26,7 @@
 
 장점은 기존 기술 기반과 사용자 ID/정책을 공유하는 점이다. 제한은 이메일 확인·발송 설정과 세션 갱신, 파일 권한/보상 정리까지 검증해야 한다는 점이다. 일반 CRUD는 로그인 사용자 클라이언트를 쓰며 기존 관리자 키 클라이언트를 기본값으로 두지 않는다.
 
-공식 근거: [Next.js 서버 인증](https://supabase.com/docs/guides/auth/server-side/nextjs), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Storage 접근 제어](https://supabase.com/docs/guides/storage/security/access-control). 라이브러리 버전과 이메일 제공자 설정은 2묶음에서 확인한다.
+공식 근거: [Next.js 서버 인증](https://supabase.com/docs/guides/auth/server-side/nextjs), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Storage 접근 제어](https://supabase.com/docs/guides/storage/security/access-control). 2묶음 코드는 Next.js 16.4.6과 @supabase/ssr 0.12.7을 사용한다. 새 Auth의 이메일 설정과 실제 메일 수신은 프로젝트 연결 후 확인해야 한다.
 
 ## 기존 MVP에서 유지할 동작
 

@@ -1,6 +1,6 @@
 {
   "projectName": "bluecollar-mission7-demo",
-  "mode": "unconfigured",
-  "supabaseProjectRef": null,
-  "confirmedNewDemoProject": false
+  "mode": "cloud",
+  "supabaseProjectRef": "nlvjybohqqkmduqcgzvj",
+  "confirmedNewDemoProject": true
 }

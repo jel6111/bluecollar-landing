@@ -4,9 +4,9 @@
 
 ## 목적과 현재 상태
 
-미션 6 공용 CRUD 데모를 바탕으로 회원이 **자기 기록과 사진만 관리**하도록 만드는 별도 제출 과제다. 고도화 기능은 유저 기능 하나다. 2026-11-10 현재 1묶음 설계/분리 단계이며 가입·로그인·RLS는 아직 구현하지 않았다.
+미션 6 공용 CRUD 데모를 바탕으로 회원이 **자기 기록과 사진만 관리**하도록 만드는 별도 제출 과제다. 고도화 기능은 유저 기능 하나다. 2026-11-10 현재 2묶음이다. 가입·로그인·확인 콜백·로그아웃·서버 세션 코드를 구현하고 새 Supabase nlvjybohqqkmduqcgzvj를 연결했다. 실제 가입·메일 확인·로그인은 사용자가 확인했고 새 Auth에서도 확인했다. 새로고침 유지·로그아웃 후 접근 제한도 사용자가 수동 확인했다. 자동 계정 검사는 비밀번호를 제공받지 않아 건너뛰었다. RLS/CRUD 통합은 3묶음이다.
 
-기술 기반은 Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Supabase Postgres/Storage다. 인증은 Supabase Auth의 이메일·비밀번호와 서버 세션을 사용할 계획이다. 기존 서비스와 미션 6의 Auth/DB/Storage/Vercel 설정은 재사용하지 않는다.
+기술 기반은 Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Supabase Postgres/Storage다. 인증은 Supabase Auth의 이메일·비밀번호와 서버 쿠키를 사용한다. Next.js 16.4.6과 @supabase/ssr 0.12.7을 적용했다. 기존 서비스와 미션 6의 Auth/DB/Storage/Vercel 설정은 재사용하지 않는다.
 
 ## 구현 순서
 
@@ -36,4 +36,4 @@
 - [작업 자원 분리](docs/mission7-isolation.md)
 - [QA 계획과 실행 근거](docs/mission7-qa.md)
 
-미션 7 클라우드 ID/배포 URL은 아직 없다. 실행·DB 명령은 의도적으로 차단한다. 의존성 없이 가능한 설계 검사는 `npm run check:plan`이다. 다음 묶음은 사용자 요청 후 진행한다.
+미션 7 Supabase ref는 nlvjybohqqkmduqcgzvj이며 Vercel ID/배포 URL은 아직 없다. 앱은 3107에서 실행할 수 있고 DB/Storage/기존 CRUD 검사 명령은 차단한다. `check:plan`, `test:auth`, `lint`, `build`, `test:auth:browser`로 해당 범위만 검사한다. 실제 계정 검사는 미연결이면 건너뜀으로 표시한다. 다음 묶음은 사용자 요청 후 진행한다.

@@ -1,6 +1,6 @@
 # 미션 7 작업 자원 분리
 
-기준일 2026-11-10. 1묶음에서는 새 작업 폴더/브랜치와 설계만 준비한다. 새 클라우드 자원은 아직 생성하지 않았다.
+기준일 2026-11-10. 1묶음 분리 후 2묶음 인증 코드를 구현했다. 새 클라우드 프로젝트를 아래 근거로 확인했다. 이전의 미연결 검사 결과는 당시 기록으로 보존한다. 사용자가 보여준 bluecollar-mission6-demo는 paused 상태이며 재개/수정하지 않았다.
 
 ## 현재 허용 범위
 
@@ -10,11 +10,11 @@
 | 브랜치 | feature/mission7-user-20261110, 이 브랜치만 수정/푸시 |
 | 새 폴더 | C:/Users/user/Documents/Codex/2026-11-10/bluecollar-mission7 |
 | 시작 커밋 | 84a7dd703af67bba5d746b9c09caef5d7a0fd9ac, 미션 6 PR #2 head |
-| 앱 포트 | 3107 계획. 실행하지 않음 |
-| Supabase | bluecollar-mission7-demo라는 새 프로젝트 계획. 조직/ref/키 미확정 |
+| 앱 포트 | 3107. 미연결 회원 화면의 빌드/브라우저 검증에 사용 |
+| Supabase | bluecollar-mission7-demo, practice 무료 조직 dewpytfcifrdkkcnzotg, ref nlvjybohqqkmduqcgzvj, ap-southeast-1 |
 | Vercel | bluecollar-mission7-demo라는 새 프로젝트 계획. 팀/ID/URL 미확정 |
 | 선택 로컬 스택 | 미션 7 전용 이름과 API/DB/Studio 57321/57322/57323 계획. 생성/시작하지 않음 |
-| 실제 환경 파일/연결 파일 | 없음. 기존 .env.local과 .vercel을 복사하지 않음 |
+| 실제 환경 파일/연결 파일 | 새 프로젝트 공개 키로 .env.local을 새로 작성. .vercel 없음. 기존 파일을 복사하지 않음 |
 
 ## 변경하지 않을 대상
 
@@ -54,3 +54,21 @@
 - 미션 6: 84a7dd703af67bba5d746b9c09caef5d7a0fd9ac, PR #2 OPEN
 
 1묶음 후 다시 대조한다. 기존 문서/SQL을 이 새 브랜치에서도 보존하며 다른 과제의 확인 결과를 현재 결과로 표시하지 않는다.
+
+
+## 2묶음 현재 차단과 허용
+
+- dev/start/build와 새 인증 검사는 허용했다. 기존 DB/파일/마이그레이션/미션 6 브라우저 명령 10개는 코드 42로 차단한다.
+- createDemoClient는 항상 거절한다. 로그인 후 기록 CRUD를 열지 않으며 인증된 하위 기록 경로도 준비 화면으로 안내한다.
+- Auth는 등록 JSON과 환경 URL/ref의 정확한 일치를 검사한다. 미션 6 ref, 관리자 키, 다른 사이트 주소와 기존 로컬 포트를 거절한다.
+- 미연결 검사 당시에는 URL/ref·키와 환경 파일이 없었다. 이후 아래 근거로 새 프로젝트만 연결했으며 .vercel과 배포는 여전히 없다.
+- 프로젝트 이름과 새 ref를 확인한 뒤 이 문서에 근거를 기록하고 setup:auth로 등록한다. 단순 브라우저 로그인은 도구의 API 연결 권한을 만들지 않는다.
+
+
+## 2026-11-10 새 프로젝트 확인
+
+- Supabase 플러그인 연결 후 practice 조직의 plan=free를 확인했다. get_cost 결과 project/monthly/amount=0을 안내한 뒤 새 프로젝트를 생성했다.
+- create_project 및 get_project가 이름 bluecollar-mission7-demo, ref nlvjybohqqkmduqcgzvj, 조직 dewpytfcifrdkkcnzotg, 지역 ap-southeast-1, 상태 ACTIVE_HEALTHY를 반환했다. 생성 시각은 2026-11-10T04:07:41.685432Z다.
+- API URL은 https://nlvjybohqqkmduqcgzvj.supabase.co다. 이 새 대상의 활성 Publishable key만 받아 Git 제외 .env.local에 썼다. 관리자 키/운영 키를 조회하지 않았다.
+- 사용자가 보여준 미션 6은 INACTIVE 상태였으며 재개하지 않았다. 새 프로젝트 이외의 데이터·인증·키·설정에는 접근하지 않았다.
+- 회원가입 이메일 복귀를 위한 새 Auth의 로컬 URL 설정은 사용자가 대시보드에서 두 항목 모두 저장했다고 확인했다. 이후 사용자가 실제 가입·확인 메일 수신·이메일 확인·로그인과 새로고침 유지·로그아웃 후 접근 제한을 수동 검증했다. 새 Auth에서도 지정 테스트 계정의 이메일 확인·로그인 완료를 확인했다.
