@@ -4,6 +4,23 @@ import { campaignProperties, type AnalyticsEvent } from "./contract";
 export type AnalyticsContext = { device: string; session: number; source: string };
 export type EventInput = { event: AnalyticsEvent; userId?: string; recordId?: string; hasPhoto?: boolean };
 
+export function recoverSignupConfirmation(
+  account: { id: string; created_at: string; email_confirmed_at?: string },
+  signupSession: number,
+  now: number,
+) {
+  const created = Date.parse(account.created_at);
+  const confirmed = Date.parse(account.email_confirmed_at ?? "");
+  const sessionLength = 30 * 60_000;
+  const confirmationWindow = 48 * 60 * 60_000;
+  // Require a recent, provider-verified signup and a browser session that predates it.
+  if (!Number.isSafeInteger(signupSession) || signupSession <= 0 ||
+      !Number.isFinite(created) || !Number.isFinite(confirmed) ||
+      created < signupSession || created - signupSession >= sessionLength ||
+      confirmed < created || confirmed > now || now - created > confirmationWindow) return null;
+  return { timestamp: confirmed, session: confirmed - signupSession < sessionLength ? signupSession : confirmed };
+}
+
 export function buildEvent(context: AnalyticsContext, input: EventInput, secret: string, timestamp: number) {
   const hash = (value: string) => createHmac("sha256", secret).update(value).digest("hex");
   const user = input.userId ? hash("user:" + input.userId) : undefined;

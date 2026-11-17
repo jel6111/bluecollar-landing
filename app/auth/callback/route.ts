@@ -13,10 +13,18 @@ function finish(path: string) {
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
   if (!code || !/^[A-Za-z0-9_-]{10,512}$/.test(code)) return finish("/auth/error");
+  const next = safeNext(request.nextUrl.searchParams.get("next"));
+  const flowId = request.nextUrl.searchParams.get("sb_flow_id");
   try {
-    const { data, error } = await (await createAuthClient()).auth.exchangeCodeForSession(code);
+    const { data, error } = await (await createAuthClient()).auth.exchangeCodeForSession(
+      code, flowId ? { flowId } : undefined,
+    );
+    if (error?.code === "pkce_code_verifier_not_found") {
+      const query = new URLSearchParams({ next, reason: "email-browser" });
+      return finish(`/login?${query}`);
+    }
     if (error) return finish("/auth/error");
     if (data.user?.email_confirmed_at) await trackSuccess({ event: "signup_confirmed", userId: data.user.id });
   } catch { return finish("/auth/error"); }
-  return finish(safeNext(request.nextUrl.searchParams.get("next")));
+  return finish(next);
 }

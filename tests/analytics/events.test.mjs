@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildEvent } from "../../lib/analytics/payload.ts";
+import { buildEvent, recoverSignupConfirmation } from "../../lib/analytics/payload.ts";
 import { campaignChannel, campaignProperties, landingLocation } from "../../lib/analytics/contract.ts";
 
 const context = { device: "c5fdcd9b-39ae-4bd6-bea3-6ecb804617d4", session: 1794888000000, source: "kakao" };
@@ -44,4 +44,21 @@ test("QA traffic is labeled and guest events contain no user ID", () => {
   assert.equal(event.event_properties.traffic_type, "qa");
   assert.equal("user_id" in event, false);
   assert.equal("has_photo" in event.event_properties, false);
+});
+
+test("record view can recover the verified confirmation at its original time without adding a new confirmation key", () => {
+  const confirmed = when + 60_000;
+  const account = {
+    id: "assignment-test-account",
+    created_at: new Date(when).toISOString(),
+    email_confirmed_at: new Date(confirmed).toISOString(),
+  };
+  const recovered = recoverSignupConfirmation(account, context.session, confirmed + 90_000);
+  assert.deepEqual(recovered, { timestamp: confirmed, session: context.session });
+  const input = { event: "signup_confirmed", userId: account.id };
+  assert.equal(buildEvent(context, input, secret, confirmed + 500).insert_id,
+    buildEvent(context, input, secret, recovered.timestamp).insert_id);
+  assert.equal(recoverSignupConfirmation(account, confirmed + 10, confirmed + 90_000), null);
+  assert.equal(recoverSignupConfirmation({ ...account, email_confirmed_at: undefined }, context.session, confirmed + 90_000), null);
+  assert.equal(recoverSignupConfirmation(account, context.session, confirmed + 49 * 60 * 60_000), null);
 });

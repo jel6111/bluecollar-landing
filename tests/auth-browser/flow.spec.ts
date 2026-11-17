@@ -56,6 +56,12 @@ test("보호된 하위 주소와 잘못된 인증 링크, 외부 next를 안전�
   await expect(page.locator('input[name="next"]')).toHaveValue("/records");
   await page.goto("/auth/callback?code=bad");
   await expect(page).toHaveURL(/\/auth\/error$/);
+  if (!unconfigured) {
+    await page.goto("/auth/callback?code=synthetic-code-used-only-for-qa&next=%2Frecords%2Fnew");
+    await expect(page).toHaveURL(/\/login\?.*reason=email-browser$/);
+    await expect(page.getByText("이 브라우저에서 가입 때의 로그인 정보를 찾지 못했습니다.", { exact: false })).toBeVisible();
+    await expect(page.locator('input[name="next"]')).toHaveValue("/records/new");
+  }
   await page.goto("/auth/confirm?type=signup&token_hash=bad");
   await expect(page.getByRole("heading", { name: "확인 링크를 처리하지 못했습니다" })).toBeVisible();
 });

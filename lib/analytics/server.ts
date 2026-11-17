@@ -8,11 +8,11 @@ export function analyticsEnabled() {
   return Boolean(process.env.AMPLITUDE_API_KEY && (process.env.MISSION8_ANALYTICS_ID_SECRET?.length ?? 0) >= 32);
 }
 
-export function queueEvent(context: AnalyticsContext, input: EventInput) {
+export function queueEvent(context: AnalyticsContext, input: EventInput, timestamp = Date.now()) {
   const apiKey = process.env.AMPLITUDE_API_KEY;
   const secret = process.env.MISSION8_ANALYTICS_ID_SECRET;
   if (!apiKey || !secret || secret.length < 32) return;
-  const event = buildEvent(context, input, secret, Date.now());
+  const event = buildEvent(context, input, secret, timestamp);
   const endpoint = process.env.AMPLITUDE_REGION === "EU"
     ? "https://api.eu.amplitude.com/2/httpapi" : "https://api2.amplitude.com/2/httpapi";
   after(async () => {

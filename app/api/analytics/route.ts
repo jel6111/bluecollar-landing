@@ -6,6 +6,7 @@ import { SITE } from "@/lib/site";
 import { currentUser } from "@/lib/auth/session";
 import { campaignChannel, cookieNames, landingLocation, views } from "@/lib/analytics/contract";
 import { analyticsEnabled, queueEvent } from "@/lib/analytics/server";
+import { recoverSignupConfirmation } from "@/lib/analytics/payload";
 
 const command = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("consent"), allow: z.boolean() }).strict(),
@@ -51,7 +52,17 @@ export async function POST(request: Request) {
   const incoming = landing ? campaignChannel(new URLSearchParams(data.query ?? "")) : null;
   const source = incoming ?? jar.get(cookieNames.source)?.value ?? "";
   if (incoming) jar.set(cookieNames.source, incoming, { ...options, maxAge: retention });
-  if (analyticsEnabled()) queueEvent({ device, session, source }, { event: data.event, userId: user?.id });
+  if (analyticsEnabled()) {
+    if (data.event === "records_viewed" && user && savedDevice === device) {
+      const confirmation = recoverSignupConfirmation(user, storedSession, now);
+      if (confirmation) {
+        // A verified login can recover the measurement when the email link did not restore a session.
+        queueEvent({ device, session: confirmation.session, source },
+          { event: "signup_confirmed", userId: user.id }, confirmation.timestamp);
+      }
+    }
+    queueEvent({ device, session, source }, { event: data.event, userId: user?.id });
+  }
 
   return NextResponse.json({
     accepted: true,
