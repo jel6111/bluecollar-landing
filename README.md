@@ -1,6 +1,6 @@
 # 블루칼라 미션 7 회원별 작업기록
 
-**회원가입·로그인과 회원별 작업기록·사진 관리를 구현했습니다. 새 DB에 3묶음 정책을 적용하고 실제 두 계정 및 공개 배포를 확인하는 단계입니다.**
+**회원가입·로그인과 회원별 작업기록·사진 관리를 구현했습니다. 공개 사이트에서 랜딩·회원 화면을 확인했습니다. 새 DB에 기록 정책을 적용하고 두 계정으로 실제 기록과 사진을 검증하는 단계입니다.**
 
 미션 6의 사진 기록 CRUD를 바탕으로 이메일·비밀번호로 가입/로그인한 사용자가 자기 기록과 사진만 관리하는 제출용 MVP를 개발합니다. 실제 서비스와 미션 6 제출물을 유지하기 위해 별도 브랜치·폴더와 새 과제 자원을 사용합니다.
 
@@ -27,9 +27,11 @@
 - 기준: 미션 6 제출 head `84a7dd703af67bba5d746b9c09caef5d7a0fd9ac`
 - 폴더: `C:/Users/user/Documents/Codex/2026-11-10/bluecollar-mission7`
 - 앱 포트: `3107` / 새 과제 이름: `bluecollar-mission7-demo`
-- Supabase ref: `nlvjybohqqkmduqcgzvj` (practice 무료 조직, Singapore). Vercel ID·공개 배포 URL은 **미확정**
+- Supabase ref: `nlvjybohqqkmduqcgzvj` (practice 무료 조직, Singapore). Vercel 프로젝트 ID는 prj_y2YTxwO9QyfbSt8xCngp5g8xhQFK
 
 기록 목록과 총 개수, 상세·수정·삭제 및 사진 발급은 로그인한 계정의 범위에서 처리합니다.
+
+공개 배포: [블루칼라 미션 7 데모](https://bluecollar-mission7-demo.vercel.app/)
 
 ## 실행과 검사
 
@@ -67,6 +69,10 @@ npm run test:auth:browser
 기록의 키는 계정 ID와 기록 ID의 조합입니다. 계정이 같을 때는 등록 요청 재시도를 구분하고, 계정이 다르면 같은 기록 ID도 별도 공간을 사용합니다. 사진은 비공개 버킷에 저장합니다. 이전 사진은 교체·제거·기록 삭제와 함께 정리 대상으로 등록되며, 지연 시 내 기록 화면에서 다시 시도할 수 있습니다.
 
 Supabase 기본 확인 메일은 조직 구성원에게만 발송됩니다. 평가자가 직접 가입하려면 과제 프로젝트에 별도 SMTP를 구성하거나 확인을 마친 평가용 계정을 제공해야 합니다. [Supabase 기본 메일 안내](https://supabase.com/docs/guides/auth/testing-auth-flows#test-email-flows-on-a-hosted-project)
+
+## Vercel에 배포
+
+미션 7 전용 Vercel 프로젝트의 Production 환경에 아래 환경 변수 세 개를 설정합니다. NEXT_PUBLIC_SITE_URL은 https://bluecollar-mission7-demo.vercel.app입니다. 미션 7 Supabase URL Configuration에서 같은 Site URL과 https://bluecollar-mission7-demo.vercel.app/auth/callback**를 추가하고 로컬 콜백을 유지합니다. 공개 주소에서 랜딩, 회원가입, 로그인과 내 기록의 인증 흐름을 다시 확인합니다.
 
 ## 사용자 시나리오
 

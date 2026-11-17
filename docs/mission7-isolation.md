@@ -12,7 +12,7 @@
 | 시작 커밋 | 84a7dd703af67bba5d746b9c09caef5d7a0fd9ac, 미션 6 PR #2 head |
 | 앱 포트 | 3107. 미연결 회원 화면의 빌드/브라우저 검증에 사용 |
 | Supabase | bluecollar-mission7-demo, practice 무료 조직 dewpytfcifrdkkcnzotg, ref nlvjybohqqkmduqcgzvj, ap-southeast-1 |
-| Vercel | bluecollar-mission7-demo라는 새 프로젝트 계획. 팀/ID/URL 미확정 |
+| Vercel | bluecollar-mission7-demo, jel6111 Hobby 팀, prj_y2YTxwO9QyfbSt8xCngp5g8xhQFK, https://bluecollar-mission7-demo.vercel.app/ |
 | 선택 로컬 스택 | 미션 7 전용 이름과 API/DB/Studio 57321/57322/57323 계획. 생성/시작하지 않음 |
 | 실제 환경 파일/연결 파일 | 새 프로젝트 공개 키로 .env.local을 새로 작성. .vercel 없음. 기존 파일을 복사하지 않음 |
 
@@ -72,3 +72,10 @@
 - API URL은 https://nlvjybohqqkmduqcgzvj.supabase.co다. 이 새 대상의 활성 Publishable key만 받아 Git 제외 .env.local에 썼다. 관리자 키/운영 키를 조회하지 않았다.
 - 사용자가 보여준 미션 6은 INACTIVE 상태였으며 재개하지 않았다. 새 프로젝트 이외의 데이터·인증·키·설정에는 접근하지 않았다.
 - 회원가입 이메일 복귀를 위한 새 Auth의 로컬 URL 설정은 사용자가 대시보드에서 두 항목 모두 저장했다고 확인했다. 이후 사용자가 실제 가입·확인 메일 수신·이메일 확인·로그인과 새로고침 유지·로그아웃 후 접근 제한을 수동 검증했다. 새 Auth에서도 지정 테스트 계정의 이메일 확인·로그인 완료를 확인했다.
+
+
+## 2026-11-17 배포 대상 검증
+
+- 새 bluecollar-mission7-demo를 jel6111 Hobby 팀에 만들었다. 프로젝트 ID는 prj_y2YTxwO9QyfbSt8xCngp5g8xhQFK다.
+- 새 프로젝트의 Production 환경에 미션 7 Supabase 공개 URL·Publishable key와 전용 Site URL만 추가했다. 새 프로젝트 ID를 지정해 CLI로 배포했다.
+- 배포 dpl_2sdsdB39Rc5CJU8YCo8c87ChwdDK가 Ready이며 공개 별칭 https://bluecollar-mission7-demo.vercel.app/과 실행 리전 sin1을 확인했다.
