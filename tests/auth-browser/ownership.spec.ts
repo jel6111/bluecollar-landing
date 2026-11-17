@@ -2,13 +2,13 @@ import { test, expect, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import { existsSync } from "node:fs";
 import sharp from "sharp";
-import registration from "../../lib/supabase/demo-project.json";
+import registration from "../../lib/analytics/mission8-project.json";
 import { validateAuthConfiguration } from "../../lib/auth/config";
 
-const fixture = ".env.auth-test.local";
+const fixture = ".env.mission8-test.local";
 if (existsSync(fixture)) process.loadEnvFile(fixture);
-const a = { email: process.env.MISSION7_TEST_EMAIL, password: process.env.MISSION7_TEST_PASSWORD };
-const b = { email: process.env.MISSION7_TEST_EMAIL_B, password: process.env.MISSION7_TEST_PASSWORD_B };
+const a = { email: process.env.MISSION8_TEST_EMAIL, password: process.env.MISSION8_TEST_PASSWORD };
+const b = { email: process.env.MISSION8_TEST_EMAIL_B, password: process.env.MISSION8_TEST_PASSWORD_B };
 
 async function login(page: Page, email: string, password: string) {
   await page.goto("/login");
@@ -24,14 +24,14 @@ for (const crossAccount of [false, true]) {
     : "내 기록과 사진을 등록·상세 조회·수정·삭제한다";
   test(name, async ({ page, browser, baseURL }) => {
     if (!a.email || !a.password || (crossAccount && (!b.email || !b.password))) {
-      test.skip(true, crossAccount ? "미션 7 테스트 계정 A·B가 필요함" : "미션 7 테스트 계정 A가 필요함");
+      test.skip(true, crossAccount ? "미션 8 테스트 계정 A·B가 필요함" : "미션 8 테스트 계정 A가 필요함");
       return;
     }
     if (crossAccount && a.email.toLowerCase() === b.email?.toLowerCase()) {
       throw new Error("서로 다른 테스트 계정이 필요합니다.");
     }
     process.loadEnvFile(".env.local");
-    const config = validateAuthConfiguration(registration, {
+    const config = validateAuthConfiguration({ ...registration, supabaseProjectRef: process.env.MISSION8_SUPABASE_REF ?? null, confirmedNewDemoProject: Boolean(process.env.MISSION8_SUPABASE_REF) }, {
       url: process.env.NEXT_PUBLIC_SUPABASE_URL,
       key: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
       siteUrl: process.env.NEXT_PUBLIC_SITE_URL,

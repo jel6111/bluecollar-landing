@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AnalyticsControls } from "@/components/analytics/Analytics";
+import { analyticsEnabled } from "@/lib/analytics/server";
 import { SITE } from "@/lib/site";
 
 const pretendard = localFont({
@@ -28,13 +30,14 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const gtm = process.env.NEXT_PUBLIC_GTM_ID;
   return (
     <html
       lang="ko"
       data-scroll-behavior="smooth"
       className={`${pretendard.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}<AnalyticsControls amplitude={analyticsEnabled()} gtmId={gtm && /^GTM-[A-Z0-9]+$/.test(gtm) ? gtm : undefined} /></body>
     </html>
   );
 }

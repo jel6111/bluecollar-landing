@@ -1,3 +1,4 @@
+import { AnalyticsSignal } from "@/components/analytics/Analytics";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
@@ -51,6 +52,7 @@ export default async function RecordsPage({
   ]);
   return (
     <>
+      <AnalyticsSignal event="records_viewed" />
       <CleanupNotice notice={query.notice} />
       {!!pending.count && (
         <form action={retryRecordPhotos} className="mb-5 flex flex-wrap items-center gap-3 text-sm text-slate-700">

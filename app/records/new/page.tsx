@@ -1,3 +1,4 @@
+import { AnalyticsSignal } from "@/components/analytics/Analytics";
 import type { Metadata } from "next";
 import { randomUUID } from "node:crypto";
 import { connection } from "next/server";
@@ -19,6 +20,7 @@ export default async function NewRecordPage() {
   const date = `${part("year")}-${part("month")}-${part("day")}`;
   return (
     <>
+      <AnalyticsSignal event="record_create_started" />
       <h1 className="text-3xl font-extrabold">사진 추가</h1>
       <p className="mt-3 text-slate-500">
         가상의 사진과 현장 이름을 넣고, 짧은 설명을 붙여주세요. 사진 없이 설명만 먼저 남겨도 됩니다.

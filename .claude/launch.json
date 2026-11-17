@@ -2,14 +2,14 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "bluecollar-mission7-demo",
+      "name": "bluecollar-mission8-demo",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
         "dev"
       ],
-      "cwd": "C:\\Users\\user\\Documents\\Codex\\2026-11-10\\bluecollar-mission7",
-      "port": 3107
+      "cwd": "C:\\Users\\user\\Documents\\Codex\\2026-11-17\\bluecollar-mission8",
+      "port": 3108
     }
   ]
 }

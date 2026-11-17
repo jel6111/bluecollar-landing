@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+const git = (...args) => execFileSync("git", args, { encoding: "utf8" }).trim();
+assert.equal(git("branch", "--show-current"), "feature/mission8-analytics-20261117");
+const baseline = "294462cb4b82a2948412f2865c7b6244c421f65b";
+execFileSync("git", ["merge-base", "--is-ancestor", baseline, "HEAD"]);
+assert.equal(git("diff", "--name-only", baseline, "--", "supabase/migrations", "docs/mission7*", "lib/supabase/demo-project.json"), "");
+assert.equal(git("check-ignore", ".env.local"), ".env.local");
+assert.equal(git("ls-files", ".env.local"), "");
+const config = JSON.parse(readFileSync("vercel.json", "utf8"));
+assert.equal(config.git.deploymentEnabled["feature/mission8-*"], false);
+console.log("Mission 8 branch, baseline, ignored credentials and old-project files verified");

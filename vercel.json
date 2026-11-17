@@ -5,7 +5,8 @@
   "git": {
     "deploymentEnabled": {
       "feature/mission6-*": false,
-      "feature/mission7-*": false
+      "feature/mission7-*": false,
+      "feature/mission8-*": false
     }
   }
 }

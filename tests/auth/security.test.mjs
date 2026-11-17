@@ -6,19 +6,19 @@ import { signupSchema, loginSchema } from "../../lib/auth/validation.ts";
 import { authErrorMessage } from "../../lib/auth/errors.ts";
 
 const ref = "abcdefghijklmnopqrst";
-const cloud = { projectName: "bluecollar-mission7-demo", mode: "cloud", supabaseProjectRef: ref, confirmedNewDemoProject: true };
-const values = { url: `https://${ref}.supabase.co`, key: "sb_publishable_" + "a".repeat(30), siteUrl: "http://127.0.0.1:3107" };
+const cloud = { projectName: "bluecollar-mission8-demo", mode: "cloud", supabaseProjectRef: ref, confirmedNewDemoProject: true };
+const values = { url: `https://${ref}.supabase.co`, key: "sb_publishable_" + "a".repeat(30), siteUrl: "http://127.0.0.1:3108" };
 test("미등록·미션 6·다른 프로젝트 URL은 인증 요청 전에 거절한다", () => {
-  for (const project of [ { ...cloud, confirmedNewDemoProject: false }, { ...cloud, projectName: "bluecollar-mission6-demo" }, { ...cloud, supabaseProjectRef: "uikvezrkmwplbslayene" } ]) assert.throws(() => validateAuthConfiguration(project, values), AuthConfigurationError);
+  for (const project of [ { ...cloud, confirmedNewDemoProject: false }, { ...cloud, projectName: "bluecollar-mission6-demo" }, { ...cloud, supabaseProjectRef: "uikvezrkmwplbslayene" }, { ...cloud, supabaseProjectRef: "nlvjybohqqkmduqcgzvj" } ]) assert.throws(() => validateAuthConfiguration(project, values), AuthConfigurationError);
   for (const url of ["https://uikvezrkmwplbslayene.supabase.co", `https://${ref}.supabase.co/path`, `https://user:pass@${ref}.supabase.co`, `https://${ref}.supabase.co?key=value`, "http://127.0.0.1:56321"]) assert.throws(() => validateAuthConfiguration(cloud, { ...values, url }), AuthConfigurationError);
 });
 test("인증 클라이언트에 관리자 키나 이전 과제 사이트 주소를 허용하지 않는다", () => {
   assert.equal(validateAuthConfiguration(cloud, values).url, values.url);
   assert.throws(() => validateAuthConfiguration(cloud, { ...values, key: "sb_secret_" + "x".repeat(30) }), AuthConfigurationError);
-  for (const siteUrl of ["https://parancollar.com", "https://bluecollar-landing.vercel.app", "https://bluecollar-mission6-demo.vercel.app", "http://127.0.0.1:3106", "https://bluecollar-mission7-demo.vercel.app/path"]) assert.throws(() => validateAuthConfiguration(cloud, { ...values, siteUrl }), AuthConfigurationError);
+  for (const siteUrl of ["https://parancollar.com", "https://bluecollar-landing.vercel.app", "https://bluecollar-mission6-demo.vercel.app", "http://127.0.0.1:3106", "https://bluecollar-mission7-demo.vercel.app", "https://bluecollar-mission8-demo.vercel.app/path"]) assert.throws(() => validateAuthConfiguration(cloud, { ...values, siteUrl }), AuthConfigurationError);
 });
 test("로컬 Auth는 새 전용 포트만 허용하고 Vercel에서 거절한다", () => {
-  const local = { ...cloud, mode: "local", supabaseProjectRef: null, localApiUrl: "http://127.0.0.1:57321" };
+  const local = { ...cloud, mode: "local", supabaseProjectRef: null, localApiUrl: "http://127.0.0.1:58321" };
   const env = { ...values, url: local.localApiUrl };
   assert.equal(validateAuthConfiguration(local, env).url, env.url);
   assert.throws(() => validateAuthConfiguration(local, { ...env, deployed: true }), AuthConfigurationError);

@@ -1,4 +1,5 @@
 "use server";
+import { trackSuccess } from "@/lib/analytics/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ownRecords } from "@/lib/supabase/server";
@@ -138,6 +139,7 @@ export async function createRecord(
   } catch (error) {
     return parsed.failed(mutationMessage(error)).state;
   }
+  await trackSuccess({ event: "record_created", userId: context.userId, recordId: result.id, hasPhoto: Boolean(parsed.image) });
   refreshRecord(result.id);
   redirect(`/records/${result.id}?page=1`);
 }

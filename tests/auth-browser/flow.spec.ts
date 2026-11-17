@@ -1,10 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 
-const registration = JSON.parse(readFileSync("lib/supabase/demo-project.json", "utf8"));
-const unconfigured = !registration.confirmedNewDemoProject;
+const unconfigured = !process.env.MISSION8_SUPABASE_REF;
 
-test("랜딩과 로그인/가입 화면은 미션 7을 표시하고 비로그인 기록 접근을 제한한다", async ({ page }) => {
+test("랜딩과 로그인/가입 화면은 미션 8을 표시하고 비로그인 기록 접근을 제한한다", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("link", { name: "내 기록 시작하기" })).toBeVisible();
   await page.getByRole("link", { name: "내 기록 시작하기" }).click();
@@ -33,14 +32,14 @@ test("미연결 상태에서 회원 요청은 기존 Supabase로 전송되지 �
   await page.getByLabel("이메일", { exact: true }).fill("qa@example.invalid");
   await page.getByLabel("비밀번호", { exact: true }).fill("valid-test-passphrase");
   await page.getByRole("button", { name: "로그인", exact: true }).click();
-  await expect(page.getByText(/새 미션 7 과제용 Supabase 연결을 준비/)).toBeVisible();
+  await expect(page.getByText(/새 미션 8 과제용 Supabase 연결을 준비/)).toBeVisible();
   expect(outbound).toEqual([]);
 });
 
 test("새 과제 Auth의 잘못된 로그인은 오류를 안내하고 세션을 만들지 않는다", async ({ page, context }) => {
   test.skip(unconfigured, "새 과제 연결이 필요함");
   await page.goto("/login");
-  await page.getByLabel("이메일", { exact: true }).fill("mission7-invalid-login@example.com");
+  await page.getByLabel("이메일", { exact: true }).fill("mission8-invalid-login@example.com");
   await page.getByLabel("비밀번호", { exact: true }).fill("invalid-test-passphrase");
   await page.getByRole("button", { name: "로그인", exact: true }).click();
   await expect(page.getByText("이메일과 비밀번호를 확인해주세요.")).toBeVisible();
@@ -82,11 +81,11 @@ test("인증 페이지가 공용 캐시에 저장되지 않고 작은 화면과 
 });
 
 test("새 과제의 실제 계정으로 로그인·새로고침·로그아웃한다", async ({ page, context, baseURL }) => {
-  const fixture = ".env.auth-test.local";
+  const fixture = ".env.mission8-test.local";
   test.skip(!existsSync(fixture) || unconfigured, "새 과제 연결과 비추적 소유 테스트 계정 준비가 필요함");
   process.loadEnvFile(fixture);
-  const email = process.env.MISSION7_TEST_EMAIL;
-  const password = process.env.MISSION7_TEST_PASSWORD;
+  const email = process.env.MISSION8_TEST_EMAIL;
+  const password = process.env.MISSION8_TEST_PASSWORD;
   if (!email || !password) {
     test.skip(true, "소유한 테스트 계정의 로컬 비밀번호 설정이 필요함");
     return;

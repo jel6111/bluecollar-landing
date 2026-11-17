@@ -22,7 +22,7 @@ export function LandingHero() {
             <Button asChild size="lg"><Link href="/records">내 기록 시작하기 <ArrowRight size={19} aria-hidden /></Link></Button>
             <Link href="#service-flow" className="inline-flex min-h-12 items-center justify-center rounded-xl px-4 font-bold text-slate-700 underline underline-offset-4">사용 흐름 보기</Link>
           </div>
-          <p className="mt-4 text-sm text-slate-500">미션 7 과제 데모 · 별도 계정으로 체험</p>
+          <p className="mt-4 text-sm text-slate-500">미션 8 과제 데모 · 별도 계정으로 체험</p>
         </div>
         <figure className="mx-auto w-full max-w-md">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/40 sm:p-6">
@@ -101,7 +101,7 @@ export function DemoInvitation() {
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="text-sm font-bold text-blue-700">미션 7 · 회원 기능 체험</p>
+            <p className="text-sm font-bold text-blue-700">미션 8 · 회원 기능 체험</p>
             <h2 id="demo-title" className="mt-3 text-2xl font-extrabold sm:text-3xl">과제용 계정으로<br />시작해보세요.</h2>
             <p className="mt-5 leading-relaxed text-slate-700">이메일로 가입하고 확인을 마친 뒤 로그인해보세요. 내 기록에서 작업 사진과 설명을 남기고, 저장한 기록을 확인하거나 수정할 수 있습니다.</p>
             <Button asChild size="lg" className="mt-7"><Link href="/signup">회원가입하기 <ArrowRight size={19} aria-hidden /></Link></Button>

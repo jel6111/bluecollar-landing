@@ -8,7 +8,7 @@ export type AuthProject = {
 
 export class AuthConfigurationError extends Error {
   constructor() {
-    super("새 미션 7 과제용 Supabase 연결을 준비하고 있습니다. 연결 후 회원 기능을 사용할 수 있습니다.");
+    super("새 미션 8 과제용 Supabase 연결을 준비하고 있습니다. 연결 후 회원 기능을 사용할 수 있습니다.");
     this.name = "AuthConfigurationError";
   }
 }
@@ -18,7 +18,7 @@ export function validateAuthConfiguration(
   values: { url?: string; key?: string; siteUrl?: string; deployed?: boolean },
 ) {
   if (
-    project.projectName !== "bluecollar-mission7-demo" ||
+    project.projectName !== "bluecollar-mission8-demo" ||
     !project.confirmedNewDemoProject ||
     !["local", "cloud"].includes(project.mode) ||
     !values.url || !values.key
@@ -28,19 +28,19 @@ export function validateAuthConfiguration(
   let site: URL;
   try {
     url = new URL(values.url);
-    site = new URL(values.siteUrl || "http://127.0.0.1:3107");
+    site = new URL(values.siteUrl || "http://127.0.0.1:3108");
   } catch { throw new AuthConfigurationError(); }
   if (url.username || url.password || url.search || url.hash || url.pathname !== "/") {
     throw new AuthConfigurationError();
   }
   if (
     site.username || site.password || site.search || site.hash || site.pathname !== "/" ||
-    !["http://127.0.0.1:3107", "http://localhost:3107", "https://bluecollar-mission7-demo.vercel.app"].includes(site.origin)
+    !["http://127.0.0.1:3108", "http://localhost:3108", "https://bluecollar-mission8-demo.vercel.app"].includes(site.origin)
   ) throw new AuthConfigurationError();
 
   if (project.mode === "cloud") {
     const ref = project.supabaseProjectRef;
-    if (!ref || !/^[a-z]{20}$/.test(ref) || ref === "uikvezrkmwplbslayene" ||
+    if (!ref || !/^[a-z]{20}$/.test(ref) || ["uikvezrkmwplbslayene", "nlvjybohqqkmduqcgzvj"].includes(ref) ||
       url.origin !== `https://${ref}.supabase.co` ||
       !/^sb_publishable_[A-Za-z0-9_-]{20,}$/.test(values.key)) {
       throw new AuthConfigurationError();
@@ -53,7 +53,7 @@ export function validateAuthConfiguration(
         localPublicKey = JSON.parse(atob(payload)).role === "anon";
       } catch { localPublicKey = false; }
     }
-    if (values.deployed || project.localApiUrl !== "http://127.0.0.1:57321" ||
+    if (values.deployed || project.localApiUrl !== "http://127.0.0.1:58321" ||
       url.origin !== project.localApiUrl ||
       !localPublicKey) {
       throw new AuthConfigurationError();

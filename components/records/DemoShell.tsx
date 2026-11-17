@@ -20,7 +20,7 @@ export async function DemoHeader() {
           <span className="leading-tight">
             블루칼라
             <span className="block text-xs font-medium text-slate-500">
-              미션 7 과제 데모
+              미션 8 과제 데모
             </span>
           </span>
         </Link>

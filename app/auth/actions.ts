@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createAuthClient } from "@/lib/auth/server";
 import { authConfiguration } from "@/lib/auth/environment";
 import { authErrorMessage } from "@/lib/auth/errors";
+import { trackSuccess } from "@/lib/analytics/server";
 import { safeNext } from "@/lib/auth/redirect";
 import { loginSchema, signupSchema, type AuthField, type AuthFormState } from "@/lib/auth/validation";
 
@@ -42,6 +43,7 @@ export async function signupAction(_previous: AuthFormState, form: FormData): Pr
   } catch (error) {
     return { next: values.next, email: parsed.data.email, message: authErrorMessage(error) };
   }
+  await trackSuccess({ event: "signup_submitted" });
   redirect(`/auth/check-email?next=${encodeURIComponent(values.next)}`);
 }
 
