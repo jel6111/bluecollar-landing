@@ -8,7 +8,7 @@
 - 단위 검사 6개에서 채널 링크, 허용 목록, 가명화·중복 방지, QA 분리를 확인했다. 인증 단위 검사 6개, lint, build, 분리 검사도 통과했다.
 - 상세 실측 응답은 로깅 증빙 ZIP의 qa/앱_응답_실측.csv에 담는다.
 - Amplitude 전용 프로젝트 bluecollar-mission8(910213)를 미션 8 공개 배포에 연결했다. 공개 수집 경로에서 동의 전 204, 동의 후 랜딩과 가입 화면 이벤트 각 HTTP 200을 확인했다.
-- 2026-11-17 Amplitude Events Segmentation에서 traffic_type=qa로 필터링한 실제 결과는 landing_viewed 1건, signup_started 1건이다. CSV는 amplitude/실제_수집_결과.csv에 담는다. 두 건은 사람 유입 성과에 포함하지 않는다.
+- 2026-11-17 15:00 KST Amplitude Events Segmentation에서 traffic_type=qa로 필터링한 당일 결과는 landing_viewed 11건, signup_started 1건이다. 이 값은 시험 방문의 이벤트 건수이며, CSV와 조회 근거를 각각 amplitude/실제_수집_결과.csv와 amplitude/검증_근거.json에 담았다.
 - 로컬 브라우저에서 GTM 요청을 모의 처리해 동의 전 미로드, 동의 후 초기화와 m8_landing_view 순서, 정리된 UTM, 철회 후 미로드를 확인했다. 실제 GTM 컨테이너/GA4 수신 검사는 별도다.
 - 미션 8 전용 GA4 속성 564812116, 웹 스트림 G-1YTGH76MPW와 GTM-KTCNM9VL을 연결하고 GTM 버전 2를 게시했다. 기존 속성과 컨테이너의 태그는 수정하지 않았다.
 - 향상된 측정과 개별 자동 측정을 모두 껐다. 동의 뒤 GTM을 로드하기 전에 Google 기본값을 설정해 자동 page_view를 막고, 정리된 랜딩 주소만 사용한다.
