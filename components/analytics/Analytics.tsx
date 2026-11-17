@@ -1,6 +1,5 @@
 "use client";
 
-import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { AnalyticsView } from "@/lib/analytics/contract";
@@ -35,6 +34,19 @@ type GtmWindow = Window & { dataLayer?: Record<string, unknown>[] };
 function layer() {
   const target = window as GtmWindow;
   return target.dataLayer ??= [];
+}
+
+function GtmBootstrap({ id }: { id: string }) {
+  useEffect(() => {
+    if (document.getElementById("mission8-gtm")) return;
+    layer().push({ "gtm.start": Date.now(), event: "gtm.js" });
+    const script = document.createElement("script");
+    script.id = "mission8-gtm";
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtm.js?id=${id}`;
+    document.head.append(script);
+  }, [id]);
+  return null;
 }
 
 export function AnalyticsSignal({ event, sendGa = false }: { event: AnalyticsView; sendGa?: boolean }) {
@@ -87,7 +99,7 @@ export function AnalyticsControls({ amplitude, gtmId }: { amplitude: boolean; gt
   const publicView = path === "/" || path === "/signup";
   return <>
     {path === "/" && choice === "yes" && gtmId && (
-      <Script id="mission8-gtm" src={`https://www.googletagmanager.com/gtm.js?id=${gtmId}`} />
+      <GtmBootstrap id={gtmId} />
     )}
     {publicView && <AnalyticsSignal key={path} event={path === "/" ? "landing_viewed" : "signup_started"} sendGa={path === "/" && Boolean(gtmId)} />}
     <div className="mx-auto w-full max-w-5xl px-4 py-3 text-sm text-slate-600">
