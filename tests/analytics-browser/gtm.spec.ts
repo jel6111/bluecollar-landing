@@ -14,6 +14,17 @@ test("동의 뒤에만 GTM이 초기화되고 정리한 UTM 랜딩 주소를 보
   await page.getByRole("button", { name: "허용", exact: true }).click();
   await expect(page.getByRole("button", { name: "이용 분석 설정" })).toBeVisible();
   await expect.poll(() => requests).toBe(1);
+  const defaults = await page.evaluate(() => {
+    const first = (window as Window & { dataLayer?: ArrayLike<unknown>[] }).dataLayer?.[0];
+    return first ? Array.from(first) : [];
+  });
+  expect(defaults).toEqual(["set", {
+    send_page_view: false,
+    page_location: "http://127.0.0.1:3108/?" + campaign,
+    page_title: "블루칼라 미션 8",
+    page_referrer: "",
+    traffic_type: "qa",
+  }]);
   const read = () => page.evaluate(() => (
     (window as Window & { dataLayer?: { event?: string; m8_page_location?: string; m8_traffic_type?: string }[] })
       .dataLayer ?? []

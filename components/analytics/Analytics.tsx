@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { AnalyticsView } from "@/lib/analytics/contract";
+import { campaignChannel, landingLocation, type AnalyticsView } from "@/lib/analytics/contract";
 
 const preferenceKey = "bluecollar-mission8-analytics";
 const changeEvent = "mission8-analytics-preference";
@@ -30,15 +30,30 @@ async function post(body: object) {
   });
 }
 
-type GtmWindow = Window & { dataLayer?: Record<string, unknown>[] };
+type GtmWindow = Window & { dataLayer?: (Record<string, unknown> | IArguments)[] };
 function layer() {
   const target = window as GtmWindow;
   return target.dataLayer ??= [];
 }
 
+function googleCommand(...args: unknown[]) {
+  // Google requires an Arguments command, not an event object or a rest array.
+  // eslint-disable-next-line prefer-rest-params
+  if (args.length) layer().push(arguments);
+}
+
 function GtmBootstrap({ id }: { id: string }) {
   useEffect(() => {
     if (document.getElementById("mission8-gtm")) return;
+    const source = campaignChannel(new URLSearchParams(window.location.search));
+    // Set defaults before loading either Google script so its first request is safe.
+    googleCommand("set", {
+      send_page_view: false,
+      page_location: landingLocation(window.location.origin, source ?? ""),
+      page_title: "블루칼라 미션 8",
+      page_referrer: "",
+      traffic_type: source === "qa" ? "qa" : "audience",
+    });
     layer().push({ "gtm.start": Date.now(), event: "gtm.js" });
     const script = document.createElement("script");
     script.id = "mission8-gtm";
