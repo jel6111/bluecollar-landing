@@ -81,7 +81,7 @@ test("인증 페이지가 공용 캐시에 저장되지 않고 작은 화면과 
   expect(errors).toEqual([]);
 });
 
-test("새 과제의 실제 계정으로 로그인·새로고침·로그아웃한다", async ({ page, context }) => {
+test("새 과제의 실제 계정으로 로그인·새로고침·로그아웃한다", async ({ page, context, baseURL }) => {
   const fixture = ".env.auth-test.local";
   test.skip(!existsSync(fixture) || unconfigured, "새 과제 연결과 비추적 소유 테스트 계정 준비가 필요함");
   process.loadEnvFile(fixture);
@@ -103,7 +103,7 @@ test("새 과제의 실제 계정으로 로그인·새로고침·로그아웃한
   await page.goto("/records/new");
   await expect(page.getByRole("heading", { name: "사진 추가", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "로그아웃", exact: true }).click();
-  await expect(page).toHaveURL("http://127.0.0.1:3107/");
+  await expect(page).toHaveURL(new URL("/", baseURL).href);
   await page.goto("/records");
   await expect(page.getByRole("heading", { name: "로그인", exact: true })).toBeVisible();
 });

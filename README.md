@@ -52,7 +52,9 @@ npm run test:auth:browser
 
 `check:plan`은 새 대상 등록과 환경 값의 일치·Git 제외·문서·기존 자료 보존·앱 허용/데이터 명령 차단을 검사합니다. 브라우저 검사 중 실제 로그인 검사는 새 프로젝트와 테스트 계정이 없으면 **건너뜀**으로 기록합니다. 기존 미션 6 검사 결과를 재사용하지 않습니다.
 
-브라우저 검사는 다른 앱을 재사용하지 않도록 3107 서버를 직접 시작·종료합니다. 실행 전에 이 과제의 기존 3107 서버를 종료합니다. 선택 자동 검증은 Git 제외 `.env.auth-test.local`의 `MISSION7_TEST_EMAIL`과 `MISSION7_TEST_PASSWORD`를 사용합니다. 두 계정 검증에는 MISSION7_TEST_EMAIL_B와 MISSION7_TEST_PASSWORD_B도 필요합니다. 비밀번호와 인증 링크는 채팅이나 Git에 공유하지 않습니다.
+기본 브라우저 검사는 3107 서버를 직접 시작·종료합니다. PowerShell에서 `$env:MISSION7_QA_PUBLIC='1'`을 설정하고 같은 명령을 실행하면 미션 7 공개 주소를 검사합니다.
+
+로그인·기록 등록·상세·수정·삭제 자동 검증은 Git에서 제외된 `.env.auth-test.local`의 `MISSION7_TEST_EMAIL`과 `MISSION7_TEST_PASSWORD`를 사용합니다. 계정 간 접근 제한은 둘째 계정의 `MISSION7_TEST_EMAIL_B`와 `MISSION7_TEST_PASSWORD_B`도 사용합니다. 검사는 자신이 생성한 가상 기록과 사진만 정리합니다. 비밀번호와 인증 링크는 채팅이나 Git에 공유하지 않습니다.
 
 ## 새 Supabase 연결 절차
 
