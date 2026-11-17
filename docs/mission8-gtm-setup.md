@@ -43,6 +43,8 @@
 
 Amplitude 수집용 API Key, 리전(US 또는 EU), ID용 독립 난수 비밀값은 Vercel 서버 환경 변수에 설정한다. Amplitude 프로젝트 ID와 Google 측정 ID는 공개 과제 대상과 일치하는지 확인한다. 실제 회사/운영 분석 속성은 연결하지 않는다.
 
-## Supabase 준비
+## Supabase 연결
 
-빈 미션 8 프로젝트를 만든 뒤 기존 미션 7과 다른 ref·공개 키를 설정한다. 기록용 SQL은 supabase/migrations/20261117012818_mission7_owned_records.sql 한 파일만 미션 8의 빈 프로젝트 SQL Editor에서 실행한다. 이전 두 파일은 이 과제에 실행하지 않는다. Site URL은 미션 8 공개 주소, 추가 URL은 미션 8 /auth/callback 경로다. 외부 사용자가 가입할 수 있도록 실제 메일 수신을 확인한 뒤 홍보한다.
+무료 practice 조직에 새 `bluecollar-mission8-demo` 프로젝트(참조 `lhzjbfkuztrkgddpnvvs`)를 만들어 미션 8 공개 사이트에 연결했다. 빈 미션 8 DB에는 기존 회원별 작업기록 스키마인 `supabase/migrations/20261117012818_mission7_owned_records.sql`을 적용했다. Site URL은 미션 8 공개 주소이며, 허용된 콜백은 공개 주소와 미션 8 로컬 주소(포트 3108)의 `/auth/callback`이다.
+
+현재 Supabase 기본 메일 서비스는 조직 멤버 이메일을 대상으로 쓸 수 있다. 외부 참여자의 가입은 [별도 SMTP 설정](https://supabase.com/docs/guides/auth/auth-smtp)과 수신 확인 후 홍보한다.
