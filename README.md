@@ -12,8 +12,8 @@
 
 .env.example에 있는 미션 8 전용 설정을 .env.local 또는 전용 Vercel 환경에 넣는다. AMPLITUDE_REGION은 US 또는 EU, MISSION8_ANALYTICS_ID_SECRET은 최소 32자 난수다. GTM 미설정 시 태그를 삽입하지 않으며, Amplitude 설정이 없으면 외부 전송이 꺼진다.
 
-전용 공개 배포에서 [Amplitude QA 이벤트 2종의 실제 수집과 GA4 실시간 보고서의 page_view 1건을 확인했다](docs/mission8-qa.md). 전용 GTM-KTCNM9VL과 GA4 G-1YTGH76MPW를 연결했다. 동의 전/철회 후 차단, page_view 1회 전송과 주소 정리는 node scripts/check-google-collection.mjs로 재현한다. 실제 QA 트래픽이 발생하는 검사다.
+전용 공개 배포에서 [Amplitude QA 이벤트 7종의 실제 수집과 GA4 실시간 보고서의 page_view 1건을 확인했다](docs/mission8-qa.md). 전용 GTM-KTCNM9VL과 GA4 G-1YTGH76MPW를 연결했다. 동의 전/철회 후 차단, page_view 1회 전송과 주소 정리는 node scripts/check-google-collection.mjs로 재현한다. 실제 QA 트래픽이 발생하는 검사다.
 
-별도 미션 8 Supabase를 공개 데모에 연결했다. 시험 계정으로 가입 요청부터 첫 기록 저장까지 확인했다. 다른 브라우저에서 메일을 열면 로그인 안내가 표시되며, 이메일 확인 로그 보완 경로의 공개 수집 검증은 [QA 문서](docs/mission8-qa.md)에 기록한다. 외부 참여자 모집에는 가입 메일 발송 설정과 실제 수신 검증이 필요하다.
+별도 미션 8 Supabase를 공개 데모에 연결했다. 시험 계정으로 가입 요청부터 첫 기록 저장까지 확인했다. 다른 브라우저에서 메일을 열면 로그인 안내가 표시되며, 가입 브라우저에서 내 기록을 다시 열었을 때 이메일 확인 로그가 수집되는 것도 검증했다. 외부 참여자 모집에는 가입 메일 발송 설정과 실제 수신 검증이 필요하다.
 
 미션 11에서는 두 분석 도구의 관찰 단위를 구분하고 테스트 유입을 제외한다.
