@@ -6,8 +6,7 @@ import DataUnavailable from "@/components/records/DataUnavailable";
 import { Card, CardContent } from "@/components/ui/card";
 import { getRecord, RecordsQueryError } from "@/lib/records/data";
 import { parsePage } from "@/lib/records/pagination";
-import { DemoConfigurationError } from "@/lib/supabase/config";
-import { createDemoClient } from "@/lib/supabase/server";
+import { ownRecords } from "@/lib/supabase/server";
 import { recordImageUrls } from "@/lib/storage/record-images";
 export const metadata: Metadata = { title: "기록 고치기" };
 export default async function EditRecordPage({
@@ -19,24 +18,24 @@ export default async function EditRecordPage({
 }) {
   await connection();
   const [{ id }, query] = await Promise.all([params, searchParams]);
+  const context = await ownRecords(`/records/${id}/edit`);
   let record;
   try {
-    record = await getRecord(id);
+    record = await getRecord(context, id);
   } catch (error) {
     if (
-      error instanceof DemoConfigurationError ||
       error instanceof RecordsQueryError
     )
       return (
         <DataUnavailable
-          configuration={error instanceof DemoConfigurationError}
+          configuration={false}
           message={error.message}
         />
       );
     throw error;
   }
   if (!record) notFound();
-  const urls = await recordImageUrls(createDemoClient(), [record]);
+  const urls = await recordImageUrls(context, [record]);
   return (
     <>
       <h1 className="text-3xl font-extrabold">기록 고치기</h1>

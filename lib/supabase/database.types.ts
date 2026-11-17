@@ -1,4 +1,5 @@
 export type WorkRecord = {
+  user_id: string;
   id: string;
   site_label: string;
   work_date: string;
@@ -14,27 +15,26 @@ export type Database = {
     Tables: {
       storage_cleanup_tasks: {
         Row: {
-          id: string;
+          user_id: string;
           record_id: string;
           image_path: string;
           reason: string;
-          attempts: number;
           created_at: string;
         };
         Insert: {
-          id?: string;
+          user_id: string;
           record_id: string;
           image_path: string;
           reason: string;
-          attempts?: number;
           created_at?: string;
         };
-        Update: { attempts?: number };
+        Update: never;
         Relationships: [];
       };
       work_records: {
         Row: WorkRecord;
         Insert: {
+          user_id: string;
           id?: string;
           site_label: string;
           work_date: string;
@@ -44,7 +44,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
-        Update: Partial<Omit<WorkRecord, "id" | "created_at">>;
+        Update: Partial<Omit<WorkRecord, "id" | "user_id" | "created_at" | "updated_at">>;
         Relationships: [];
       };
     };

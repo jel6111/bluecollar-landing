@@ -1,8 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createDemoClient } from "@/lib/supabase/server";
-import { DemoConfigurationError } from "@/lib/supabase/config";
+import { ownRecords } from "@/lib/supabase/server";
 import {
   createRecordSchema,
   extractRecordValues,
@@ -21,6 +20,7 @@ import {
   deleteWorkRecord,
   RecordMutationError,
 } from "@/lib/records/service";
+import { retryPendingImages } from "@/lib/storage/record-images";
 import { listHref, parsePage } from "@/lib/records/pagination";
 import type {
   RecordFormState,
@@ -111,8 +111,7 @@ async function parseForm(formData: FormData, editing: boolean) {
   };
 }
 function mutationMessage(error: unknown) {
-  return error instanceof DemoConfigurationError ||
-    error instanceof RecordMutationError
+  return error instanceof RecordMutationError
     ? error.message
     : "처리하지 못했습니다. 입력한 내용은 유지됩니다. 잠시 후 다시 시도해주세요.";
 }
@@ -125,12 +124,13 @@ export async function createRecord(
   _previous: RecordFormState,
   formData: FormData,
 ): Promise<RecordFormState> {
+  const context = await ownRecords("/records/new");
   const parsed = await parseForm(formData, false);
   if (!parsed.ok) return parsed.state;
   let result;
   try {
     result = await createWorkRecord(
-      createDemoClient(),
+      context,
       parsed.id,
       parsed.input,
       parsed.image,
@@ -145,12 +145,13 @@ export async function updateRecord(
   _previous: RecordFormState,
   formData: FormData,
 ): Promise<RecordFormState> {
+  const context = await ownRecords();
   const parsed = await parseForm(formData, true);
   if (!parsed.ok) return parsed.state;
   let result;
   try {
     result = await updateWorkRecord(
-      createDemoClient(),
+      context,
       parsed.id,
       parsed.version,
       parsed.input,
@@ -169,6 +170,7 @@ export async function deleteRecord(
   _previous: DeleteFormState,
   formData: FormData,
 ): Promise<DeleteFormState> {
+  const context = await ownRecords();
   const id = formData.get("record_id");
   const version = formData.get("expected_updated_at");
   if (
@@ -190,7 +192,7 @@ export async function deleteRecord(
     };
   let result;
   try {
-    result = await deleteWorkRecord(createDemoClient(), String(id), version);
+    result = await deleteWorkRecord(context, String(id), version);
   } catch (error) {
     return { message: mutationMessage(error) };
   }
@@ -199,4 +201,18 @@ export async function deleteRecord(
   redirect(
     listHref(page) + (result.cleanupPending ? "&notice=cleanup-pending" : ""),
   );
+}
+
+
+export async function retryRecordPhotos(formData: FormData) {
+  const context = await ownRecords();
+  const page = parsePage(String(formData.get("page") ?? "1"));
+  let completed = false;
+  try {
+    completed = await retryPendingImages(context);
+  } catch {
+    // Leave the pending entries available for retry.
+  }
+  revalidatePath("/records");
+  redirect(listHref(page) + (completed ? "" : "&notice=cleanup-pending"));
 }

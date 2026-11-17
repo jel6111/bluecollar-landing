@@ -1,9 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
   "regions": ["sin1"],
   "git": {
     "deploymentEnabled": {
-      "feature/mission6-*": false
+      "feature/mission6-*": false,
+      "feature/mission7-*": false
     }
   }
 }

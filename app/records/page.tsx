@@ -8,11 +8,11 @@ import RecordPagination from "@/components/records/RecordPagination";
 import DataUnavailable from "@/components/records/DataUnavailable";
 import { getRecordsPage, RecordsQueryError } from "@/lib/records/data";
 import { listHref, parsePage } from "@/lib/records/pagination";
-import { DemoConfigurationError } from "@/lib/supabase/config";
-import { createDemoClient } from "@/lib/supabase/server";
+import { ownRecords } from "@/lib/supabase/server";
 import { recordImageUrls } from "@/lib/storage/record-images";
+import { retryRecordPhotos } from "./actions";
 import CleanupNotice from "@/components/records/CleanupNotice";
-export const metadata: Metadata = { title: "기록 관리" };
+export const metadata: Metadata = { title: "내 기록" };
 export default async function RecordsPage({
   searchParams,
 }: {
@@ -23,17 +23,17 @@ export default async function RecordsPage({
 }) {
   await connection();
   const query = await searchParams;
+  const context = await ownRecords(listHref(parsePage(query.page)));
   let result;
   try {
-    result = await getRecordsPage(parsePage(query.page));
+    result = await getRecordsPage(context, parsePage(query.page));
   } catch (error) {
     if (
-      error instanceof DemoConfigurationError ||
       error instanceof RecordsQueryError
     )
       return (
         <DataUnavailable
-          configuration={error instanceof DemoConfigurationError}
+          configuration={false}
           message={error.message}
         />
       );
@@ -44,13 +44,24 @@ export default async function RecordsPage({
       listHref(result.page) +
         (query.notice === "cleanup-pending" ? "&notice=cleanup-pending" : ""),
     );
-  const urls = await recordImageUrls(createDemoClient(), result.records);
+  const [urls, pending] = await Promise.all([
+    recordImageUrls(context, result.records),
+    context.db.from("storage_cleanup_tasks").select("image_path", { count: "exact", head: true })
+      .eq("user_id", context.userId),
+  ]);
   return (
     <>
       <CleanupNotice notice={query.notice} />
+      {!!pending.count && (
+        <form action={retryRecordPhotos} className="mb-5 flex flex-wrap items-center gap-3 text-sm text-slate-700">
+          <input type="hidden" name="page" value={result.page} />
+          <span>정리할 이전 사진이 {pending.count}개 있습니다.</span>
+          <Button variant="secondary" type="submit">사진 정리 다시 시도</Button>
+        </form>
+      )}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold">기록 관리</h1>
+          <h1 className="text-3xl font-extrabold">내 기록</h1>
           <p className="mt-2 text-slate-500">
             총 {result.total}건 · 최근 등록한 기록부터 표시합니다.
           </p>
