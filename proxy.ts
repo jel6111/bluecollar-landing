@@ -43,8 +43,6 @@ export async function proxy(request: NextRequest) {
     authenticated = !error && Boolean(data?.claims?.sub);
   } catch { /* Fail closed; provider errors and tokens are not logged. */ }
   if (protectedPath && !authenticated) return move(`/login?next=${encodeURIComponent(safeNext(path + request.nextUrl.search))}`);
-  // Group 2 intentionally has no record DB access. Pages/Actions also refuse it.
-  if (authenticated && path.startsWith("/records/")) return move("/records?notice=preparing");
   return privateResponse(response);
 }
 export const config = { matcher: ["/", "/login", "/signup", "/auth/:path*", "/records/:path*"] };

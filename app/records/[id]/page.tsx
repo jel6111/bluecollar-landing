@@ -8,8 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import DataUnavailable from "@/components/records/DataUnavailable";
 import { getRecord, RecordsQueryError } from "@/lib/records/data";
 import { parsePage, listHref } from "@/lib/records/pagination";
-import { DemoConfigurationError } from "@/lib/supabase/config";
-import { createDemoClient } from "@/lib/supabase/server";
+import { ownRecords } from "@/lib/supabase/server";
 import { recordImageUrls } from "@/lib/storage/record-images";
 import RecordImage from "@/components/records/RecordImage";
 import DeleteRecordDialog from "@/components/records/DeleteRecordDialog";
@@ -29,24 +28,24 @@ export default async function RecordDetail({
   await connection();
   const [{ id }, query] = await Promise.all([params, searchParams]);
   const page = parsePage(query.page);
+  const context = await ownRecords(`/records/${id}`);
   let record;
   try {
-    record = await getRecord(id);
+    record = await getRecord(context, id);
   } catch (error) {
     if (
-      error instanceof DemoConfigurationError ||
       error instanceof RecordsQueryError
     )
       return (
         <DataUnavailable
-          configuration={error instanceof DemoConfigurationError}
+          configuration={false}
           message={error.message}
         />
       );
     throw error;
   }
   if (!record) notFound();
-  const urls = await recordImageUrls(createDemoClient(), [record]);
+  const urls = await recordImageUrls(context, [record]);
   return (
     <>
       <CleanupNotice notice={query.notice} />

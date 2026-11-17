@@ -95,13 +95,13 @@ test("새 과제의 실제 계정으로 로그인·새로고침·로그아웃한
   await page.getByLabel("이메일", { exact: true }).fill(email);
   await page.getByLabel("비밀번호", { exact: true }).fill(password);
   await page.getByRole("button", { name: "로그인", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "로그인되었습니다" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "내 기록", exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("heading", { name: "로그인되었습니다" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "내 기록", exact: true })).toBeVisible();
   const authCookies = (await context.cookies()).filter((cookie) => cookie.name.startsWith("sb-"));
   expect(authCookies.length > 0 && authCookies.every((cookie) => cookie.httpOnly)).toBe(true);
   await page.goto("/records/new");
-  await expect(page).toHaveURL(/\/records\?notice=preparing$/);
+  await expect(page.getByRole("heading", { name: "사진 추가", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "로그아웃", exact: true }).click();
   await expect(page).toHaveURL("http://127.0.0.1:3107/");
   await page.goto("/records");

@@ -103,7 +103,7 @@ export function DemoInvitation() {
           <div>
             <p className="text-sm font-bold text-blue-700">미션 7 · 회원 기능 체험</p>
             <h2 id="demo-title" className="mt-3 text-2xl font-extrabold sm:text-3xl">과제용 계정으로<br />시작해보세요.</h2>
-            <p className="mt-5 leading-relaxed text-slate-700">이메일로 가입하고 확인을 마친 뒤 로그인해보세요. 내 기록 관리는 사용자별 데이터 권한을 연결하는 다음 묶음에서 준비합니다.</p>
+            <p className="mt-5 leading-relaxed text-slate-700">이메일로 가입하고 확인을 마친 뒤 로그인해보세요. 내 기록에서 작업 사진과 설명을 남기고, 저장한 기록을 확인하거나 수정할 수 있습니다.</p>
             <Button asChild size="lg" className="mt-7"><Link href="/signup">회원가입하기 <ArrowRight size={19} aria-hidden /></Link></Button>
           </div>
           <div className="rounded-2xl border border-blue-200 bg-white p-5 sm:p-7">

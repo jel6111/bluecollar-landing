@@ -46,7 +46,7 @@ export function DemoNotice() {
     <aside className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-4 text-sm leading-relaxed text-blue-900">
       <p className="font-bold">가상의 작업만 기록해주세요.</p>
       <p className="mt-1">
-        실제 서비스와 분리된 회원 기능 과제입니다. 실제 현장·연락처·고객 자료를 입력하지 마세요. 기록 관리는 사용자별 권한을 연결하는 다음 묶음에서 준비합니다.
+        실제 서비스와 분리된 회원 기능 과제입니다. 실제 현장·연락처·고객 자료를 입력하지 마세요. 로그인한 계정의 기록과 사진만 내 기록에 표시됩니다.
       </p>
     </aside>
   );

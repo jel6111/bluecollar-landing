@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { randomUUID } from "node:crypto";
 import { connection } from "next/server";
+import { requireUser } from "@/lib/auth/session";
 import RecordForm from "@/components/records/RecordForm";
 import { Card, CardContent } from "@/components/ui/card";
 export const metadata: Metadata = { title: "사진 추가" };
 export default async function NewRecordPage() {
   await connection();
+  await requireUser("/records/new");
   const parts = new Intl.DateTimeFormat("en", {
     timeZone: "Asia/Seoul",
     year: "numeric",

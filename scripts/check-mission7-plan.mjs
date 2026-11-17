@@ -84,4 +84,4 @@ for (const path of documents) {
     links++;
   }
 }
-console.log(JSON.stringify({ phase: "mission7-group2-auth", documents: documents.length, localLinks: links, allowedAppCommands: allowedCommands.length, guardedDataCommands: protectedCommands.length, preservedFiles: preserved.length, environmentFiles: environmentFiles.length, connectedCloudProjects: registration.confirmedNewDemoProject ? 1 : 0, passed: true }));
+console.log(JSON.stringify({ phase: "mission7-isolation", documents: documents.length, localLinks: links, allowedAppCommands: allowedCommands.length, guardedDataCommands: protectedCommands.length, preservedFiles: preserved.length, environmentFiles: environmentFiles.length, connectedCloudProjects: registration.confirmedNewDemoProject ? 1 : 0, passed: true }));

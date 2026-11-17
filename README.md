@@ -1,6 +1,6 @@
 # 블루칼라 미션 7 회원별 작업기록
 
-**현재는 2묶음입니다. 회원 기능을 구현하고 새 미션 7 Supabase를 연결했습니다. 실제 가입·메일 확인·로그인·새로고침 유지·로그아웃 후 접근 제한을 사용자 수동 검증으로 확인했습니다. 3묶음 CRUD/RLS와 배포는 아직 진행하지 않았습니다.**
+**회원가입·로그인과 회원별 작업기록·사진 관리를 구현했습니다. 새 DB에 3묶음 정책을 적용하고 실제 두 계정 및 공개 배포를 확인하는 단계입니다.**
 
 미션 6의 사진 기록 CRUD를 바탕으로 이메일·비밀번호로 가입/로그인한 사용자가 자기 기록과 사진만 관리하는 제출용 MVP를 개발합니다. 실제 서비스와 미션 6 제출물을 유지하기 위해 별도 브랜치·폴더와 새 과제 자원을 사용합니다.
 
@@ -18,7 +18,7 @@
 - [과제 자원 분리와 연결 전 확인](docs/mission7-isolation.md)
 - [QA 계획과 실행 결과](docs/mission7-qa.md)
 
-기술 기반은 Next.js 16.4.6 App Router, React 19.2.4, TypeScript, Tailwind CSS, shadcn/ui, Supabase JS 2.117.3과 SSR 0.12.7입니다. 회원 처리는 Server Actions, 메일 확인은 Route Handler, 세션 검증은 서버 Auth 클라이언트를 사용합니다. 기록 소유권과 RLS는 3묶음 작업입니다.
+기술 기반은 Next.js 16.4.6 App Router, React 19.2.4, TypeScript, Tailwind CSS, shadcn/ui, Supabase JS 2.117.3과 SSR 0.12.7입니다. 회원 처리는 Server Actions, 메일 확인은 Route Handler, 세션 검증은 서버 Auth 클라이언트를 사용합니다. 기록 CRUD는 인증 사용자 클라이언트와 DB/Storage RLS를 함께 사용합니다.
 
 ## 작업 위치와 단계
 
@@ -29,7 +29,7 @@
 - 앱 포트: `3107` / 새 과제 이름: `bluecollar-mission7-demo`
 - Supabase ref: `nlvjybohqqkmduqcgzvj` (practice 무료 조직, Singapore). Vercel ID·공개 배포 URL은 **미확정**
 
-2묶음에서는 앱 실행과 회원 검사만 허용합니다. 기록 DB·파일·기존 CRUD 검사 명령은 계속 차단하며, 로그인 성공 후에도 기록 화면은 다음 단계 준비 안내만 표시합니다. 기존 환경 파일과 Vercel 연결 파일은 복사하지 않았습니다.
+기록 목록과 총 개수, 상세·수정·삭제 및 사진 발급은 로그인한 계정의 범위에서 처리합니다.
 
 ## 실행과 검사
 
@@ -50,7 +50,7 @@ npm run test:auth:browser
 
 `check:plan`은 새 대상 등록과 환경 값의 일치·Git 제외·문서·기존 자료 보존·앱 허용/데이터 명령 차단을 검사합니다. 브라우저 검사 중 실제 로그인 검사는 새 프로젝트와 테스트 계정이 없으면 **건너뜀**으로 기록합니다. 기존 미션 6 검사 결과를 재사용하지 않습니다.
 
-브라우저 검사는 다른 앱을 재사용하지 않도록 3107 서버를 직접 시작·종료합니다. 실행 전에 이 과제의 기존 3107 서버를 종료합니다. 실제 계정 검증은 Git 제외 `.env.auth-test.local`의 `MISSION7_TEST_EMAIL`과 `MISSION7_TEST_PASSWORD`를 사용하며 비밀번호/메일 링크를 채팅이나 Git에 남기지 않습니다.
+브라우저 검사는 다른 앱을 재사용하지 않도록 3107 서버를 직접 시작·종료합니다. 실행 전에 이 과제의 기존 3107 서버를 종료합니다. 선택 자동 검증은 Git 제외 `.env.auth-test.local`의 `MISSION7_TEST_EMAIL`과 `MISSION7_TEST_PASSWORD`를 사용합니다. 두 계정 검증에는 MISSION7_TEST_EMAIL_B와 MISSION7_TEST_PASSWORD_B도 필요합니다. 비밀번호와 인증 링크는 채팅이나 Git에 공유하지 않습니다.
 
 ## 새 Supabase 연결 절차
 
@@ -60,9 +60,17 @@ npm run test:auth:browser
 4. `npm run setup:auth -- <확인한-새-ref> --confirmed-new-mission7`으로 확인된 새 대상만 등록하고 앱을 다시 빌드합니다. 키는 명령 인수에 넣지 않습니다.
 5. 사용자 소유 테스트 주소로 가입·메일 확인·로그인·새로고침·로그아웃 및 실패 시나리오를 확인하고 QA 결과를 기록합니다. 비밀번호나 인증 링크는 채팅과 Git에 남기지 않습니다.
 
+## 기록과 사진 설정
+
+새 과제 프로젝트 nlvjybohqqkmduqcgzvj의 SQL Editor에서 [미션 7 전용 마이그레이션](supabase/migrations/20261117012818_mission7_owned_records.sql) 한 파일을 실행합니다. 이 파일은 기록 테이블이 없는 새 프로젝트용입니다. 같은 폴더에 보존한 미션 6 SQL은 실행 대상에서 제외합니다.
+
+기록의 키는 계정 ID와 기록 ID의 조합입니다. 계정이 같을 때는 등록 요청 재시도를 구분하고, 계정이 다르면 같은 기록 ID도 별도 공간을 사용합니다. 사진은 비공개 버킷에 저장합니다. 이전 사진은 교체·제거·기록 삭제와 함께 정리 대상으로 등록되며, 지연 시 내 기록 화면에서 다시 시도할 수 있습니다.
+
+Supabase 기본 확인 메일은 조직 구성원에게만 발송됩니다. 평가자가 직접 가입하려면 과제 프로젝트에 별도 SMTP를 구성하거나 확인을 마친 평가용 계정을 제공해야 합니다. [Supabase 기본 메일 안내](https://supabase.com/docs/guides/auth/testing-auth-flows#test-email-flows-on-a-hosted-project)
+
 ## 사용자 시나리오
 
-최종 목표는 랜딩 → 회원가입 → 이메일 확인 → 로그인 → 내 기록 목록 → 등록 → 상세 → 수정·삭제 → 로그아웃입니다. **현재 2묶음의 로그인 후 화면은 준비 안내이며 기록 CRUD는 차단합니다.** 계정 A의 목록과 기록 수에는 A의 자료만 표시하고 B의 상세/수정/삭제와 새 사진 URL 발급 요청을 차단합니다.
+사용 흐름은 랜딩 → 회원가입 → 이메일 확인 → 로그인 → 내 기록 목록 → 등록 → 상세 → 수정·삭제 → 로그아웃입니다. 계정 A의 목록과 기록 수에는 A의 자료만 표시하고 B의 상세/수정/삭제와 새 사진 URL 발급 요청을 차단합니다.
 
 ## 환경 변수
 

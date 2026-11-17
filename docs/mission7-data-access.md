@@ -1,24 +1,25 @@
 # 미션 7 데이터와 권한 설계
 
-2026-11-10 설계안. SQL/정책을 아직 실행하지 않았으며 기존 DB 스키마를 변경하지 않는다.
+2026-11-17 구현. 새 기록 DB와 Storage 정책의 실제 적용 상태는 QA 문서를 따른다.
 
 ## 기존 코드에서 바꿔야 할 경계
 
 미션 6의 createDemoClient는 서버 비밀 키를 사용하고 세션을 유지하지 않는다. 목록/개수 조회도 사용자 소유자 조건이 없다. 이번에는 요청별로 인증을 검증하는 클라이언트로 일반 CRUD를 교체하고 DB/Storage의 RLS를 적용한다. 로그인 UI 추가만으로 소유권을 충족했다고 판단하지 않는다.
 
-2묶음에서는 이전 createDemoClient가 항상 연결 오류를 반환하도록 바꾸어 기존 DB 접근을 차단했다. 새 Auth 클라이언트는 요청별 쿠키와 공개 키만 사용하며 서버에서 getUser로 사용자 상태를 검증한다. 아래 DB/Storage 정책은 3묶음 설계이며 아직 적용하지 않았다.
+2묶음에서는 이전 createDemoClient가 항상 연결 오류를 반환하도록 바꾸어 기존 DB 접근을 차단했다. 새 Auth 클라이언트는 요청별 쿠키와 공개 키만 사용하며 서버에서 getUser로 사용자 상태를 검증한다. 3묶음에서는 검증한 세션과 소유자 조건을 기록의 모든 조회·변경과 사진 서명에 사용한다.
 
-## 새 과제 테이블 계획
+## 새 과제 테이블
 
 | 항목 | 설계 |
 |---|---|
 | auth.users | Supabase Auth가 이메일·인증 정보를 관리. 비밀번호를 앱 테이블에 저장하지 않음 |
 | work_records.user_id | 새 필수 uuid, auth.users.id 참조. 클라이언트 입력을 사용하지 않고 서버 세션에서 결정 |
 | 기존 기록 필드 | id, site_label, work_date, title, description, image_path, created_at, updated_at과 기존 검증 유지 |
+| 기본 키 | (user_id, id). 기록 ID는 소유자 공간 안에서 고유하다. 같은 UUID를 다른 사용자가 제출해도 별개의 기록이다. |
 | 인덱스 | (user_id, created_at DESC, id DESC). 본인 목록/개수/페이지 조회에 대응 |
 | 소유자 변경 | 등록 후 다른 사용자로 이전하는 기능 없음. 수정 payload에 user_id를 허용하지 않음 |
 | 사용자 삭제 | 이번 범위 아님. FK는 기본 거절로 설계해 무심코 계정 삭제만으로 사진이 고아가 되는 cascade를 도입하지 않음 |
-| storage_cleanup_tasks | 기존 큐 필드에 user_id 추가. record_id에는 FK를 두지 않아 삭제 후 정리 가능. 사용자 소유자는 유지 |
+| storage_cleanup_tasks | user_id, record_id, image_path, reason, created_at을 보관. record_id에는 FK를 두지 않아 삭제 후 정리 가능. 사용자 소유자는 유지 |
 
 새 프로젝트에서 빈 상태로 준비한다. 미션 6의 기존 가상 기록을 새 사용자에게 자동 귀속하거나 데이터를 복사하지 않는다. 앱용 profiles 테이블은 이번 최소 범위에 만들지 않는다.
 
@@ -41,17 +42,17 @@
 - 경로: `users/{auth-user-id}/records/{record-id}/{new-file-id}.{jpg|png|webp}`. 업로드 때마다 새 파일 ID를 쓰고 덮어쓰지 않는다.
 - 허용 크기 3 MiB, JPEG/PNG/WebP, 실제 디코딩·메타데이터 제거·화소 제한은 기존 동작을 유지한다.
 - 업로드/조회/서명 URL 발급/삭제 모두 자신의 경로만 허용하도록 Storage RLS를 설계한다. 앱에서는 해당 기록도 같은 소유자인지 확인한다.
-- 파일 owner 메타데이터만으로 권한이 생긴다고 가정하지 않는다. prefix만 맞춘 타인 record-id와 경로 변조도 검사한다.
+- Storage 정책은 owner_id와 경로 앞부분을 같이 확인한다. 기록에 사진을 연결할 때 사진 경로의 계정 ID와 기록 ID가 해당 행과 일치해야 한다. 새 사진은 기록 저장 전에 자신의 경로에 올릴 수 있다.
 - 서명 URL 유효기간은 600초를 유지하는 계획이다. 유효 URL을 가진 사람은 만료 전 열 수 있으므로 로그아웃/계정 전환으로 이미 발급된 URL이 즉시 폐기된다고 주장하지 않는다. 타인 사용자가 새 URL을 발급할 수 없어야 한다.
 
 ## 저장 보상과 정리 큐
 
 등록/수정의 새 사진 업로드와 DB 변경은 하나의 트랜잭션이 아니다. 실패 보상과 연결 사진 보호를 유지한다. 정리 큐에도 user_id를 보존해 기록 삭제 후 본인 파일만 재시도한다. 유효한 세션이 없으면 사용자 정리를 실행하지 않는다. 내부 정리 실패를 원문 오류/토큰과 함께 저장하지 않는다.
 
-일반 사용자 큐 접근에는 소유자 RLS를 적용하고 서버가 검증한 경로/이유만 기록한다. 추후 관리자가 재시도해야 할 때는 별도 도구와 별도 프로젝트 검증으로 분리한다. 지금 관리자 키로 모든 사용자 요청을 처리하는 우회는 하지 않는다.
+사진의 연결 변경·기록 삭제와 정리 큐 등록은 한 DB 트랜잭션에서 처리한다. 파일 삭제에 실패하면 내 기록의 정리 버튼으로 다시 시도한다. DB와 앱 양쪽에서 현재 연결된 파일의 삭제를 막는다. 일반 사용자 큐에도 소유자 RLS를 적용한다. 추후 관리자가 재시도해야 할 때는 별도 도구와 별도 프로젝트 검증으로 분리한다. 지금 관리자 키로 모든 사용자 요청을 처리하는 우회는 하지 않는다.
 
 ## 인증 환경과 캐시
 
 새 과제 URL·공개용 키와 로그인 세션으로 일반 요청을 처리한다. 설정/검증용 관리 키가 필요하면 별도 서버 도구에 한정한다. 공개 키에는 관리자 권한을 넣지 않으며 RLS와 사용자 세션이 권한을 결정한다. 인증된 응답을 공용 캐시에 저장하지 않고 세션 갱신 응답의 쿠키를 보존한다.
 
-공식 참고: [SSR 인증](https://supabase.com/docs/guides/auth/server-side/nextjs), [행 수준 정책](https://supabase.com/docs/guides/database/postgres/row-level-security), [Storage 정책](https://supabase.com/docs/guides/storage/security/access-control). 실제 마이그레이션/타입 생성/정책 검사와 기존 서비스 경계 검사는 다음 묶음에서 수행한다.
+공식 참고: [SSR 인증](https://supabase.com/docs/guides/auth/server-side/nextjs), [행 수준 정책](https://supabase.com/docs/guides/database/postgres/row-level-security), [Storage 정책](https://supabase.com/docs/guides/storage/security/access-control). SQL 검사는 두 가상 사용자 역할로 실행하고 테스트 자료를 롤백한다. 운영과 이전 과제는 별개다.
