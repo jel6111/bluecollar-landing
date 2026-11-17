@@ -10,14 +10,19 @@
 - Amplitude 전용 프로젝트 bluecollar-mission8(910213)를 미션 8 공개 배포에 연결했다. 공개 수집 경로에서 동의 전 204, 동의 후 랜딩과 가입 화면 이벤트 각 HTTP 200을 확인했다.
 - 2026-11-17 Amplitude Events Segmentation에서 traffic_type=qa로 필터링한 실제 결과는 landing_viewed 1건, signup_started 1건이다. CSV는 amplitude/실제_수집_결과.csv에 담는다. 두 건은 사람 유입 성과에 포함하지 않는다.
 - 로컬 브라우저에서 GTM 요청을 모의 처리해 동의 전 미로드, 동의 후 초기화와 m8_landing_view 순서, 정리된 UTM, 철회 후 미로드를 확인했다. 실제 GTM 컨테이너/GA4 수신 검사는 별도다.
+- 미션 8 전용 GA4 속성 564812116, 웹 스트림 G-1YTGH76MPW와 GTM-KTCNM9VL을 연결하고 GTM 버전 2를 게시했다. 기존 속성과 컨테이너의 태그는 수정하지 않았다.
+- 향상된 측정과 개별 자동 측정을 모두 껐다. 동의 뒤 GTM을 로드하기 전에 Google 기본값을 설정해 자동 page_view를 막고, 정리된 랜딩 주소만 사용한다.
+- 2026-11-17 14:38 KST 공개 배포 검사에서 Google 수집 서버의 page_view 응답 HTTP 204를 1건 확인했다. G-1YTGH76MPW, 허용된 QA UTM, 고정 제목, traffic_type=qa가 일치하고 합성 code/email 쿼리는 제외됐다. traffic_type은 GA4 전송 규약에서 tt로 나타난다.
+- 같은 공개 검사에서 동의 전 Google 요청 0건, 철회·새로고침 후 새 요청 0건, 페이지 오류 0건을 확인했다. 12초 동안 늦게 묶여 전송되는 중복 page_view도 확인했다. 재현: node scripts/check-google-collection.mjs. 이 검사는 실제 QA 이벤트를 전송한다.
+- GA4 수집 서버의 응답과 GA4 보고서 반영은 구분한다. 14:39 KST Realtime Data API는 HTTP 200이었으나 결과 행이 없었다. 이 응답을 실제 수집 건수 CSV로 바꾸어 표시하지 않는다.
 
 ## 확인 대기
 
 | 대상 | 현재 상태 | 증빙 |
 |---|---|---|
 | Amplitude의 회원 이벤트 | 랜딩과 가입 화면의 실제 수집 2종 확인. 가입 완료·기록 등 나머지 5종은 미션 8 계정과 DB 준비 후 검증 | 전용 프로젝트의 QA 수집 결과 추가 |
-| GTM | 미션 8 전용 컨테이너 ID와 태그 게시 대기 | Google 태그·GA4 이벤트 태그와 Preview 화면 |
-| GA4 | 미션 8 속성·웹 스트림 측정 ID 및 DebugView 수신 대기 | DebugView 화면 또는 실제 CSV |
+| GTM | 전용 컨테이너 버전 2 게시·공개 동작 확인. 공식 화면 캡처 대기 | 게시한 설정 API JSON과 공개 브라우저 실측은 준비. Google 태그·GA4 이벤트 태그의 UI 캡처 추가 |
+| GA4 | 공개 브라우저에서 정확한 page_view 전송과 HTTP 204 확인. 보고서 수신 확인 대기 | Realtime/DebugView 화면 또는 실제 보고서 CSV 추가 |
 | 회원 이벤트 | 미션 8 전용 Supabase와 외부 가입 메일 준비 대기 | 공개 앱에서 신규 가입 → 확인 → 기록 저장을 1회 수행 |
 | 홍보 | 카카오톡·네이버 블로그·인스타그램 UTM 및 문안 준비 | 대상 채널의 실제 게시 URL 또는 캡처 |
 

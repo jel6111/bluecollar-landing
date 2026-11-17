@@ -1,10 +1,17 @@
 # 미션 8 GTM·GA4 설정 및 제출 캡처
 
+## 연결된 미션 8 전용 대상
+
+- GA4: BLOG 계정 아래 새 속성 **블루칼라 미션 8**, 속성 ID 564812116, 측정 ID **G-1YTGH76MPW**.
+- GTM: 커넥트이슈 계정 아래 새 컨테이너 **bluecollar-mission8-demo**, ID **GTM-KTCNM9VL**. 게시한 버전은 2다.
+- [게시한 GTM 설정 열기](https://tagmanager.google.com/#/versions/accounts/6002126741/containers/287302122/versions/2?apiLink=version)
+- 아래의 생성 절차는 재구성용 참고다. 같은 이름의 속성이나 컨테이너를 추가로 만들지 않는다.
+
 ## GA4 속성과 웹 스트림
 
 1. [Google 애널리틱스](https://analytics.google.com/)에서 **관리(Admin) → 만들기(Create) → 속성(Property)**을 누른다. 새 속성 이름은 블루칼라 미션 8로 한다.
 2. 새 속성에서 **관리 → 데이터 수집 및 수정 → 데이터 스트림(Data streams) → 스트림 추가 → 웹(Web)**을 연다. 웹사이트 URL은 https://bluecollar-mission8-demo.vercel.app/이다.
-3. 웹 스트림에서 **향상된 측정(Enhanced measurement)**을 끈 뒤 **측정 ID(Measurement ID)**를 확인한다. 값은 G-로 시작한다.
+3. 웹 스트림에서 **향상된 측정(Enhanced measurement)**과 개별 자동 측정을 끈 뒤 **측정 ID(Measurement ID)**를 확인한다. 값은 G-로 시작한다.
 
 ## GTM의 변수·트리거·태그
 
@@ -23,11 +30,13 @@
 5. **태그 → 새로 만들기 → Google 애널리틱스: GA4 이벤트**를 선택한다. 같은 G- ID를 넣고 이벤트 이름은 page_view로 설정한다. 트리거는 m8_landing_view다.
 6. 이벤트 매개변수로 page_location, page_title, page_referrer, traffic_type에 각각 해당 m8_ 변수를 설정한다. **고급 설정 → 태그 시퀀싱**에서 이 태그 전에 4번 Google 태그를 실행하도록 선택한다.
 
+현재 게시본은 구성 설정 변수와 이벤트 설정 변수를 사용해 위 값을 재사용한다. 자동 생성된 destination 태그는 중지 상태로 유지한다. 사이트는 동의 후 스크립트 삽입 전에 Google set 명령으로 send_page_view=false와 정리된 주소를 먼저 넣는다. 초기 자동 조회와 맞춤 조회가 중복되거나 최초 요청에 원래 쿼리가 섞이는 것을 방지하기 위한 순서다.
+
 ## 공개 배포와 증빙
 
 1. 미션 8 Vercel의 NEXT_PUBLIC_GTM_ID를 설정하고 재배포한다. 사이트 코드는 동의 후 랜딩에서 GTM을 초기화한다.
 2. GTM **미리보기(Preview)**에서 [QA 전용 캠페인 링크](https://bluecollar-mission8-demo.vercel.app/?utm_source=qa&utm_medium=test&utm_campaign=mission8_launch&utm_content=log_check)를 연다. 수집을 허용한 뒤 m8_landing_view 한 건에서 page_view 태그가 실행되는지, 데이터 영역 값이 지정한 UTM과 일치하는지 확인한다.
-3. GA4 **관리 → 데이터 표시 → DebugView**에서 page_view와 올바른 URL·QA 속성을 확인한다. 결과가 맞으면 GTM의 **제출(Submit) → 게시(Publish)**를 실행한다.
+3. GA4 **보고서 → 실시간 개요**에서 수집을 확인한다. **관리 → 데이터 표시 → DebugView**는 Tag Assistant 등으로 디버그 모드를 켰을 때 사용한다. 일반 방문이 DebugView에 보일 것으로 가정하지 않는다. 변경이 필요할 때만 GTM의 **제출(Submit) → 게시(Publish)**를 실행한다.
 4. 실제 GTM 태그 설정·Preview 화면과 GA4 수집 화면, 또는 실제 CSV를 증빙 ZIP에 저장한다. 로컬 모의 태그 검사는 이 두 자료와 구분한다.
 
 참고: [GTM 컨테이너 만들기](https://support.google.com/tagmanager/answer/14842164?hl=ko), [GA4 이벤트 태그 설정](https://support.google.com/tagmanager/answer/13034206?hl=ko), [태그 시퀀싱](https://support.google.com/tagmanager/answer/6238868?hl=ko).
